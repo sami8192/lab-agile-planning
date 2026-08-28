@@ -200,7 +200,7 @@ def _inner(canvas, doc):
     canvas.setFillColor(GREY)
     canvas.drawString(MARGIN, PAGE_H - 0.55 * inch, REPORT_TITLE)
     canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 0.55 * inch,
-                           'ZIP 80127  |  20 mi  |  $6,000-$15,000')
+                           'ZIP 80127  |  20 mi  |  $6,000-$18,000')
     canvas.line(MARGIN, 0.66 * inch, PAGE_W - MARGIN, 0.66 * inch)
     canvas.setFont('Helvetica', 7.4)
     canvas.drawString(MARGIN, 0.5 * inch, date.today().strftime('%B %d, %Y'))
@@ -217,7 +217,7 @@ def build(path):
         topMargin=0.85 * inch, bottomMargin=0.85 * inch,
         title=REPORT_TITLE,
         author='Vehicle research brief',
-        subject='Used Jeep Wrangler acquisition analysis, ZIP 80127, $6,000-$15,000')
+        subject='Used Jeep Wrangler acquisition analysis, ZIP 80127, $6,000-$18,000')
 
     fw = PAGE_W - 2 * MARGIN
     cover_frame = Frame(MARGIN, MARGIN, fw, PAGE_H - 2 * MARGIN, id='cover',
@@ -265,7 +265,7 @@ def cover(fw):
         ['SEARCH ORIGIN', 'ZIP 80127 - Ken Caryl / Littleton, Jefferson County, Colorado'],
         ['RADIUS', '20 miles (covers Littleton, Lakewood, Englewood, Morrison, Golden,\n'
                    'Wheat Ridge, Arvada, Centennial, Denver metro south and west)'],
-        ['BUDGET', '$6,000 - $15,000'],
+        ['BUDGET', '$6,000 - $18,000'],
         ['SCOPE', 'VIN authentication - vehicle history exposure - generation and\n'
                   'model-year reliability - seller and dealer reliability'],
         ['REPORT DATE', date.today().strftime('%B %d, %Y')],
@@ -298,7 +298,7 @@ def cover(fw):
     s.append(Spacer(1, 0.08 * inch))
     contents = [
         '1.  Method, evidence grading, and what this report can and cannot prove',
-        '2.  What $6,000-$15,000 actually buys near 80127',
+        '2.  What $6,000-$18,000 actually buys near 80127',
         '3.  VIN-authenticated candidate vehicles',
         '4.  Jeep Wrangler VIN decoding reference',
         '5.  Generation deep-dive: TJ, JK 3.8L, JK 3.6L',
@@ -414,7 +414,7 @@ def section_method(fw):
         [tag('CONTRADICTED', RUST), 'Recovered from a search index and shown false by the VIN '
          'or by an internal inconsistency.'],
     ]
-    s.append(datatable(['Grade', 'Meaning'], grades, [0.95 * inch, fw - 0.95 * inch]))
+    s.append(datatable(['Grade', 'Meaning'], grades, [1.15 * inch, fw - 1.15 * inch]))
     s.append(Spacer(1, 8))
     s.append(callout(
         'The one instruction that carries the most weight in this report',
@@ -430,12 +430,21 @@ def section_method(fw):
 
 # ---------------------------------------------------------- 2. market
 def section_market(fw):
-    s = [CondPageBreak(3.1 * inch), P('2.  What $6,000-$15,000 actually buys near 80127', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('2.  What $6,000-$18,000 actually buys near 80127', 'h1'), rule()]
+    s.append(callout(
+        'The extra $3,000 buys more than it looks like it should',
+        'Raising the ceiling from $15,000 to $18,000 is not a 20% improvement in what you can '
+        'buy - it is a change of category. At $15,000 every 3.6L Pentastar within reach was a '
+        '2012 or 2013, the two worst-rated JK model years. At $18,000 the <b>2015-2017</b> JKs '
+        '- consistently the best-rated of the entire generation - come inside private-party '
+        'money. That reverses the central recommendation of the $15,000 analysis, and Section 6 '
+        'sets out the new one.',
+        accent=GREEN, bg=colors.HexColor('#eaf1ea')))
+
     s.append(P(
         'The Wrangler is the single most depreciation-resistant mainstream 4x4 sold in the '
-        'United States, and that cuts against you here. Your budget does not reach a '
-        'late-model JL. It lands squarely on two older generations, and the choice between '
-        'them is the most consequential decision in this whole exercise.', 'body'))
+        'United States. Your budget still does not reach a JL. What it now does reach is the '
+        'whole mature end of the JK run, which is where you want to be.', 'body'))
 
     gens = [
         ['TJ', '1997-2006', '2-door only', '4.0L I6 (190 hp)\n2.4L/2.5L I4',
@@ -445,46 +454,75 @@ def section_market(fw):
         ['JK', '2007-2011', '2-door + Unlimited 4-door', '3.8L V6 (202 hp)',
          '$8,000-$15,000',
          'Modern comforts, 4-door option. Weak, thirsty engine that drinks oil past 100k. '
-         'TIPM electrical gremlins.'],
+         'TIPM electrical gremlins. <b>Now a value play, not a stretch.</b>'],
         ['JK', '2012-2013', '2-door + Unlimited 4-door', '3.6L Pentastar V6 (285 hp)',
-         '$12,000-$15,000+',
+         '$12,000-$16,000',
          'Big power jump and the engine you want - but these are the two worst-rated JK '
-         'years, and early Pentastar heads failed.'],
-        ['JK', '2014-2018', '2-door + Unlimited 4-door', '3.6L Pentastar V6 (285 hp)',
+         'years, and early Pentastar heads failed. <b>Hard to justify now.</b>'],
+        ['JK', '2014', '2-door + Unlimited 4-door', '3.6L Pentastar V6 (285 hp)',
+         '$14,000-$18,000',
+         'First year clear of the cylinder-head defect. Denver average list price is '
+         '$17,531 at an average 110,014 miles - reachable, but you are paying near the top of '
+         'budget for a high-mile car.'],
+        ['JK', '2015-2017', '2-door + Unlimited 4-door', '3.6L Pentastar V6 (285 hp)',
+         '$14,000-$18,000+',
+         '<b>The target.</b> Best-rated JK years, good engine, defect-free. Now inside budget '
+         'at private-party money - Section 2.1 has the numbers. Expect to work for it at the '
+         'lower-mileage end.'],
+        ['JK / JL', '2018+', '2-door + Unlimited 4-door', '3.6L Pentastar V6 (285 hp)',
          'Above budget',
-         'The sweet spot (2015-2017 especially). Realistically out of reach under $15,000 '
-         'except at very high mileage or with a branded title.'],
+         'JL launch year brought its own teething problems. Out of reach and not worth '
+         'chasing at this price.'],
     ]
     s.append(datatable(
         ['Gen', 'Years', 'Body', 'Engine', 'Typical ask', 'The trade you are making'],
         [[Paragraph(g[0], S['cellb'])] + [Paragraph(x.replace('\n', '<br/>'), S['cell'])
                                           for x in g[1:]] for g in gens],
-        [0.42 * inch, 0.72 * inch, 0.95 * inch, 1.05 * inch, 0.85 * inch,
-         fw - 3.99 * inch]))
+        [0.40 * inch, 0.78 * inch, 0.88 * inch, 0.94 * inch, 1.00 * inch,
+         fw - 4.0 * inch]))
     s.append(Spacer(1, 9))
 
     s.append(P('2.1  Valuation anchors', 'h2'))
     s.append(P(
-        'Kelley Blue Book figures for the two model years that sit most directly in your '
-        'budget. Note how wide the gap is between trade-in and private-party - that spread '
-        'is the dealer\'s margin, and it is your negotiating room.', 'body'))
+        'Kelley Blue Book figures across the model years your budget now spans. The gap '
+        'between trade-in and private-party is the dealer\'s margin, and it is your '
+        'negotiating room. Read the <b>private-party</b> column as what the vehicle is worth; '
+        'read the <b>trade-in</b> column as roughly what a dealer paid for it.', 'body'))
     kbb = [
-        ['2011 Wrangler Unlimited Sport', '$4,690 - $5,765', '$9,800 - $11,850', '$11,400',
-         '20% over 3 yrs'],
-        ['2012 Wrangler Unlimited Sport', '$6,515 - $7,915', '$11,330 - $13,680', '$13,150',
-         '15% over 3 yrs'],
+        ['2011 Unlimited Sport (4-dr)', '$4,690 - $5,765', '$9,800 - $11,850', '$11,400'],
+        ['2012 Unlimited Sport (4-dr)', '$6,515 - $7,915', '$11,330 - $13,680', '$13,150'],
+        ['2014 Unlimited Sport (4-dr)', '$7,205 - $8,605', '$12,200 - $14,450', '-'],
+        ['<b>2015 Unlimited Sport (4-dr)</b>', '$9,005 - $10,830', '<b>$13,190 - $15,790</b>',
+         '$15,400'],
+        ['2015 Sport S (2-dr)', '$6,915 - $8,340', '$12,500 - $14,900', '$14,550'],
+        ['<b>2016 Sport (2-dr)</b>', '$9,990 - $11,840', '<b>$13,270 - $15,620</b>', '$14,900'],
+        ['2017 Sport S (2-dr)', '$10,330 - $11,980', '$13,710 - $15,810', '-'],
     ]
     s.append(datatable(
-        ['Vehicle', 'Trade-in value', 'Private-party value', 'Resale value', 'Depreciation'],
-        kbb, [2.0 * inch, 1.15 * inch, 1.3 * inch, 0.95 * inch, fw - 5.4 * inch],
+        ['Vehicle', 'Trade-in value', 'Private-party value', 'Resale value'],
+        kbb, [2.15 * inch, 1.35 * inch, 1.55 * inch, fw - 5.05 * inch],
         aligns=[('ALIGN', (1, 1), (-1, -1), 'CENTER')]))
     s.append(Spacer(1, 7))
     s.append(P(
-        'Two things fall out of this table. First, a 2012 is worth roughly $1,750 more than '
-        'a 2011 at retail - which is the market pricing in the 3.6L Pentastar over the 3.8L. '
-        'Second, if a dealer is asking $13,500 for a 2011 Unlimited Sport, they are asking '
-        'above the top of the private-party band for a car they likely took in at around '
-        '$5,000. That is a conversation worth having.', 'body'))
+        'Three conclusions. First, and decisively: <b>a 2015 Unlimited Sport carries a resale '
+        'value of $15,400 and a private-party top end of $15,790.</b> That is inside $18,000 '
+        'with room for tax and an inspection. The best-rated JK years are genuinely available '
+        'to you now. Second, across all body styles the 2015 private-party range runs '
+        '$13,700-$17,950 and the 2016 range $13,750-$18,700 - so the four-door Unlimiteds and '
+        'higher trims sit at or just past your ceiling, while two-doors and base Sports sit '
+        'comfortably inside it. Third, the 2011-2012 cars have not become bad buys; they have '
+        'become <b>value</b> buys, several thousand dollars below your ceiling. That is a '
+        'legitimate strategy if you would rather spend the difference on maintenance than on '
+        'model year.', 'body'))
+    s.append(callout(
+        'Dealer retail runs above these numbers',
+        'The Denver average list price for a 2014 Wrangler is <b>$17,531</b> against an average '
+        '<b>110,014 miles</b> - which is well above the 2014 private-party band in the table. '
+        'Franchise-dealer asking prices in this market carry a real premium over book. At '
+        '$18,000 you will find 2015-2017 cars comfortably through private sale, and only at '
+        'the high-mileage end of a dealer lot. Budget accordingly, and treat any dealer ask '
+        'above the private-party top end as an opening position rather than a price.',
+        accent=AMBER, bg=colors.HexColor('#f7f1de')))
 
     s.append(P('2.2  Supply in the search radius', 'h2'))
     s.append(P(
@@ -493,6 +531,8 @@ def section_market(fw):
     supply = [
         ['Cars.com', 'Wranglers under $15,000, Denver', '27'],
         ['iSeeCars', 'Wranglers under $15,000, Denver', '43'],
+        ['Cars.com', 'Wrangler Unlimiteds under $20,000, Littleton', '67'],
+        ['Cars.com', 'All Wranglers, Littleton', '114'],
         ['CarGurus', 'All Wranglers near Denver', '619 (from $5,995)'],
         ['CarGurus', 'All Wranglers near Littleton', '614 (from $4,210)'],
         ['TrueCar', 'All Wranglers, Littleton', '1,211 (from $4,786)'],
@@ -502,10 +542,17 @@ def section_market(fw):
                        [1.15 * inch, 3.3 * inch, fw - 4.45 * inch]))
     s.append(Spacer(1, 7))
     s.append(P(
-        'Reading across these: somewhere in the region of <b>30 to 45 genuine candidates</b> '
-        'sit inside your price band in the metro area at any given moment. That is a healthy '
-        'pool. You can afford to be ruthless and walk away from anything that fails a check '
-        'in Section 10 - there will be another one next week.', 'body'))
+        'No source published a count at exactly $18,000, so the band has to be bracketed. '
+        'Denver holds 27-43 Wranglers under $15,000, and Littleton alone holds 67 Unlimiteds '
+        'under $20,000. Interpolating, the $6,000-$18,000 window across the 20-mile radius '
+        'plausibly contains <b>60 to 90 candidates</b> at any given moment - roughly double '
+        'what the $15,000 ceiling reached, and the added inventory is concentrated in exactly '
+        'the 2014-2017 years you most want. Treat that as a bracketed estimate, not a count.',
+        'body'))
+    s.append(P(
+        'The practical effect: you can afford to be ruthless. Walk away from anything that '
+        'fails a check in Section 10 - there will be another one next week, and now there '
+        'will be several.', 'body'))
     return s
 
 
@@ -513,8 +560,9 @@ def section_market(fw):
 def section_candidates(fw):
     s = [CondPageBreak(3.1 * inch), P('3.  VIN-authenticated candidate vehicles', 'h1'), rule()]
     s.append(P(
-        'Seven complete VINs were recovered from Colorado listing pages. All seven pass the '
-        'check digit, so all seven are genuine factory VINs. The left half of this table is '
+        'Eight complete VINs were recovered from Colorado listing pages, including one 2014 '
+        'Unlimited brought into scope by the raised ceiling. All eight pass the check digit, '
+        'so all eight are genuine factory VINs. The left half of this table is '
         '<b>VERIFIED</b> - computed from the VIN itself, offline. The right half is '
         '<b>REPORTED</b> - what a search snippet claimed, which Section 1.3 shows is '
         'unreliable.', 'body'))
@@ -546,8 +594,13 @@ def section_candidates(fw):
     s.append(P(
         'Franchise dealers almost always set the advertised stock number to the '
         '<b>last eight characters of the VIN</b>. That convention leaks the model year and '
-        'assembly plant even when the full VIN is not indexed. Two useful leads:', 'body'))
+        'assembly plant even when the full VIN is not indexed. Three useful leads:', 'body'))
     stock = [
+        ['GL246888', '<b>G = 2016</b>, L = Toledo South',
+         '<b>AutoNation Chrysler Jeep Broadway, 5445 S Broadway, Littleton CO 80121.</b> A 2016 '
+         'Wrangler at a franchise Jeep store inside your radius - squarely in the best-rated '
+         'JK years and, per Section 2.1, plausibly inside $18,000. <b>The single most '
+         'promising lead in this report.</b> Get the full VIN and the price.'],
         ['AL126983', 'A = 2010, L = Toledo South',
          'AutoNation CDJR Southwest, Littleton. Reported as a 2010 Wrangler; a 2010 Unlimited '
          'Sport with 93,066 mi and service records was separately described at this dealer.'],
@@ -563,29 +616,36 @@ def section_candidates(fw):
     s.append(Spacer(1, 9))
 
     s.append(callout(
-        'Shortlist: where to spend your first three phone calls',
-        [P('<b>1. 1J4AA2D1XAL173194</b> - 2010 two-door, reported $10,700 / 111,535 mi, '
-           'Lakewood. Lowest-risk entry point of the group: two-door JKs are simpler, this '
-           'sits mid-budget, and the price leaves room for the repairs a 111k-mile 3.8L will '
-           'eventually want. <i>Ask: oil consumption over the last 5,000 miles.</i>', 'callb'),
-         Spacer(1, 4),
-         P('<b>2. 1C4AJWAG1CL117007</b> - 2012 two-door, reported 54,371 mi, 3.6L manual, '
-           'Englewood. By far the lowest mileage recovered and the good engine. Two caveats: '
-           'price was never stated, and 2012 is a Pentastar cylinder-head year. '
-           '<i>Ask: price, and whether the left cylinder head has ever been replaced.</i>',
+        'Shortlist: where to spend your first four phone calls',
+        [P('<b>1. Stock GL246888</b> - 2016 Wrangler at AutoNation Chrysler Jeep Broadway, '
+           'Littleton. Not a full VIN, but the strongest lead here: a best-rated model year, '
+           'the good engine, at a franchise Jeep store eight miles from 80127. Only the raised '
+           'ceiling puts this in play. <i>Ask: the full VIN, the price, and the mileage.</i>',
            'callb'),
          Spacer(1, 4),
-         P('<b>3. 1J4BA6H17BL574757</b> - 2011 Unlimited Rubicon, reported around '
-           '$11,899-$12,599. A Rubicon at Sport money is genuinely attractive - lockers, '
-           'disconnecting sway bar, 4:1 transfer case. But the mileage was reported two '
-           'different ways (99,127 and 123,567). <i>Ask: the actual odometer reading, first.</i>',
-           'callb')],
+         P('<b>2. 1C4BJWEG6EL123953</b> - 2014 Unlimited four-door, reported 122,634 mi, 3.6L, '
+           'Englewood. The first model year clear of the Pentastar cylinder-head defect. The '
+           'mileage is high and a 2014 Unlimited Sport books at $12,200-$14,450 private-party, '
+           'so anything near $18,000 is overpriced. <i>Ask: price, and service history for the '
+           'last 30,000 miles.</i>', 'callb'),
+         Spacer(1, 4),
+         P('<b>3. 1C4AJWAG1CL117007</b> - 2012 two-door, reported 54,371 mi, 3.6L manual, '
+           'Englewood. By far the lowest mileage recovered. Worth a call purely for that, but '
+           '2012 is a Pentastar cylinder-head year and the raised budget means you no longer '
+           '<i>have</i> to accept that risk. <i>Ask: price, and whether the left cylinder head '
+           'has ever been replaced.</i>', 'callb'),
+         Spacer(1, 4),
+         P('<b>4. 1J4AA2D1XAL173194</b> - 2010 two-door, reported $10,700 / 111,535 mi, '
+           'Lakewood. No longer the safe compromise it was at a $15,000 ceiling - now the '
+           'deliberate value play, leaving roughly $7,000 of headroom for maintenance. '
+           '<i>Ask: oil consumption over the last 5,000 miles.</i>', 'callb')],
         accent=OLIVE, bg=SAND))
 
     s.append(P('3.2  Vehicles to drop now', 'h2'))
     s.append(bullets([
-        '<b>1C4HJXDN9LW170163</b> - genuinely a 2020 JL Willys, but reported at $23,500. '
-        'That is 57% over your ceiling. Out of scope.',
+        '<b>1C4HJXDN9LW170163</b> - genuinely a 2020 JL Willys, but reported at $23,500. Even '
+        'at the raised ceiling that is 31% over. Out of scope, and the gap is too wide to '
+        'negotiate away.',
         '<b>1J4FA49S31P347487</b> (2001 TJ) and <b>1J4FA49S46P788486</b> (2006 TJ) - real '
         'vehicles, and a 2006 TJ is a credible buy at this budget. But both were indexed '
         'against Colorado Springs listings, roughly 60-70 miles from 80127. Outside your '
@@ -872,9 +932,10 @@ def section_generations(fw):
 def section_yearrisk(fw):
     s = [CondPageBreak(3.1 * inch), P('6.  Model-year risk matrix', 'h1'), rule()]
     s.append(P(
-        'Ranked for a buyer working in the $6,000-$15,000 band. The uncomfortable pattern: '
-        'the years your budget most easily reaches are disproportionately the years with the '
-        'worst records.', 'body'))
+        'Ranked for a buyer working in the $6,000-$18,000 band. At a $15,000 ceiling this '
+        'matrix was an exercise in damage limitation - the reachable years were largely the '
+        'bad ones. At $18,000 the best rows in the table are live options, and the strategy '
+        'changes from avoiding the worst to buying the best.', 'body'))
 
     yrs = [
         ['2007', 'JK 3.8', 'AVOID',
@@ -884,9 +945,9 @@ def section_yearrisk(fw):
          'Teething largely resolved. Still 3.8L oil consumption and TIPM exposure. RHD models '
          'fall under the clockspring recall.', AMBER],
         ['2010-2011', 'JK 3.8', 'ACCEPTABLE',
-         'Best of the 3.8L years and the sweet spot for this budget. Engine is weak but the '
-         'known faults are understood and cheap to diagnose. Most of Section 3 sits here.',
-         GREEN],
+         'Best of the 3.8L years. Engine is weak but the known faults are understood and cheap '
+         'to diagnose. No longer the default pick - now the <b>value</b> pick, several thousand '
+         'below your ceiling.', GREEN],
         ['2012', 'JK 3.6', 'HIGH RISK',
          'Rated the <b>worst</b> JK year: roughly ten recalls, TIPM failures, airbag faults, '
          'death wobble, and engine problems that in bad cases meant a rebuild or replacement '
@@ -896,36 +957,45 @@ def section_yearrisk(fw):
          'Transmission failures and engine stalling are the recurring complaints. Also carries '
          'the 13V-234 transmission oil cooler tube recall.', RUST],
         ['2014', 'JK 3.6', 'GOOD',
-         'Pentastar head issue resolved, most JK teething behind it. Rarely reachable under '
-         '$15,000 in 2026 except at high mileage.', GREEN],
+         'Pentastar head issue resolved, most JK teething behind it. <b>Now reachable</b> - '
+         'Denver average list $17,531 at an average 110,014 mi, so expect high mileage at the '
+         'top of your budget.', GREEN],
         ['2015-2017', 'JK 3.6', 'BEST',
-         'Consistently the highest-rated JK years. A clean 2016 or 2017 JK with the 3.6L is '
-         'the safest used Wrangler you can buy. Above budget - but if you can stretch, this '
-         'is where to stretch to.', GREEN],
+         'Consistently the highest-rated JK years, and <b>now inside budget</b>: a 2015 '
+         'Unlimited Sport books at $13,190-$15,790 private-party, a 2016 Sport 2-dr at '
+         '$13,270-$15,620. A clean 2016 or 2017 with the 3.6L is the safest used Wrangler you '
+         'can buy. <b>This is the target.</b>', GREEN],
         ['2018', 'JK / JL', 'CAUTION',
          'JL launch year, sold alongside the run-out JK. Steering wander, reported weld '
-         'defects, manual-transmission clutch problems. Well above budget regardless.', AMBER],
+         'defects, manual-transmission clutch problems. Above budget regardless.', AMBER],
     ]
     s.append(datatable(
         ['Year(s)', 'Gen', 'Verdict', 'Basis'],
         [[Paragraph('<b>%s</b>' % y[0], S['cell']), Paragraph(y[1], S['cell']),
           tag(y[2], y[4]), Paragraph(y[3], S['cell'])] for y in yrs],
-        [0.72 * inch, 0.55 * inch, 0.82 * inch, fw - 2.09 * inch]))
+        [0.72 * inch, 0.52 * inch, 0.97 * inch, fw - 2.21 * inch]))
     s.append(Spacer(1, 9))
 
     s.append(callout(
-        'The central tension in your budget',
-        'The 3.6L Pentastar is clearly the better engine, and every 3.6L car your budget '
-        'reaches is a 2012 or 2013 - the two worst-rated JK years. Meanwhile the best-behaved '
-        'cars your budget reaches comfortably are 2010-2011, and those have the weak, '
-        'oil-drinking 3.8L. There is no option that is both cheap and clean. '
+        'The recommendation, revised for an $18,000 ceiling',
+        'At $15,000 there was a genuine dilemma: the better engine only came attached to the '
+        'worst model years, so the advice was to take a well-kept 2010-2011 with the weak 3.8L '
+        'and accept it. <b>At $18,000 that dilemma disappears.</b> '
         '<br/><br/>'
-        '<b>The recommendation:</b> for most buyers, a well-maintained <b>2010 or 2011</b> with '
-        'complete service records and a clean pre-purchase inspection beats a cheap 2012 with '
-        'an unknown history. The 3.8L\'s faults are well-mapped, slow-moving and affordable. '
-        'A 2012 Pentastar head failure is sudden and can total the engine. Buy the 3.6L only '
-        'if the dealer service department confirms the head history from the VIN.',
-        accent=OLIVE, bg=SAND))
+        '<b>Buy a 2015, 2016 or 2017 JK with the 3.6L.</b> These are the best-rated years of '
+        'the generation, they have the good engine, they are clear of the Pentastar '
+        'cylinder-head defect, and Section 2.1 shows them booking between $13,200 and $15,800 '
+        'private-party - inside your ceiling with room for tax and inspection. You are no '
+        'longer choosing the least-bad option; you are buying the right one.'
+        '<br/><br/>'
+        '<b>Two fallbacks, in order.</b> If nothing clean turns up in 2015-2017, a <b>2014</b> '
+        'is the same engine and the same defect-free status, just older - but watch the '
+        'mileage, because Denver 2014s average 110,014 miles. Failing that, a documented '
+        '<b>2010-2011</b> at around $11,000-$12,000 is a deliberate value play that leaves '
+        '$6,000-$7,000 of your budget for maintenance and a lift. '
+        '<b>What you should no longer do is buy a 2012 or 2013.</b> That was a compromise '
+        'forced by the old ceiling, and the extra $3,000 has bought you out of it.',
+        accent=GREEN, bg=colors.HexColor('#eaf1ea')))
     return s
 
 
@@ -1095,6 +1165,17 @@ def section_seller(fw):
          '(one report of 2.5 days before a vehicle was looked at), $230/hr labour, paperwork '
          'not delivered after sale, and poor responsiveness from sales, finance and management '
          'once the deal closed. <b>Get every promise in writing before signing.</b>'],
+        ['AutoNation Chrysler Jeep Broadway',
+         '5445 S Broadway, Littleton, CO 80121',
+         '<b>4.2 / 5</b> across 260 CARFAX reviews; <b>4.3 / 5</b> across 840 DealerRater '
+         'reviews.',
+         'The second Jeep franchise store in your radius and the source of the 2016 lead in '
+         'Section 3.1 (stock GL246888). Largest new and used inventory in south Denver, so the '
+         'best odds of 2015-2017 stock. Complaint themes: the advertised "one price" not '
+         'matching the price actually paid, and a certified-used inspection described as '
+         'questionable (one buyer took delivery with mismatched tyres). <b>Confirm the '
+         'out-the-door figure in writing, and do not treat their CPO inspection as a '
+         'substitute for your own.</b>'],
         ['CarMax (Englewood and other metro stores)',
          '6 Colorado stores',
          'Not BBB accredited.',
@@ -1154,7 +1235,7 @@ def section_seller(fw):
     s.append(P('9.3  Seller scorecard', 'h2'))
     s.append(P(
         'Score each seller out of 100 before you commit. Under 60, walk. This weighting is '
-        'built for a $6,000-$15,000 purchase, where the seller\'s honesty matters more than '
+        'built for a $6,000-$18,000 purchase, where the seller\'s honesty matters more than '
         'their showroom.', 'body'))
     score = [
         ['Current Colorado dealer licence verified', '15',
@@ -1324,7 +1405,7 @@ def section_ppi(fw):
         'a sound vehicle says yes without hesitating. Any variation of no - "we don\'t allow '
         'that", "it\'s sold as-is", "our own techs already checked it", "someone else is coming '
         'at four" - is a complete answer to a different question, and the answer is that you '
-        'should leave. There are 30 to 45 other candidates in this market.',
+        'should leave. There are 60 to 90 other candidates in this market.',
         accent=RUST))
     return s
 
@@ -1352,19 +1433,38 @@ def section_negotiation(fw):
          'Above $12,000 needs justifying: low miles, Rubicon or Sahara trim, or documented '
          'major work.'],
         ['2012 Unlimited Sport', '$6,515 - $7,915', '$11,330 - $13,680',
-         'The Pentastar premium is real and roughly $1,750 over the 2011. Only pay it with '
-         'cylinder-head history confirmed.'],
+         'Only pay the Pentastar premium with cylinder-head history confirmed - and at this '
+         'budget, prefer a 2015-2017 instead.'],
+        ['2014 Unlimited Sport', '$7,205 - $8,605', '$12,200 - $14,450',
+         'Denver dealers average $17,531 on 2014s at 110,014 mi. That is roughly $3,000 over '
+         'book. Say so.'],
+        ['2015 Unlimited Sport', '$9,005 - $10,830', '$13,190 - $15,790',
+         'Your primary target. Anything under $16,000 in good condition is a fair deal; under '
+         '$15,000 is a good one.'],
+        ['2016 Sport (2-dr)', '$9,990 - $11,840', '$13,270 - $15,620',
+         'Same reasoning. Note the trade-in floor is high, so dealers have less room here than '
+         'on the older cars.'],
+        ['2017 Sport S (2-dr)', '$10,330 - $11,980', '$13,710 - $15,810',
+         'Top of your realistic range. Expect firm pricing - these are the most sought-after '
+         'JK years.'],
     ]
     s.append(datatable(
         ['Vehicle', 'What a dealer paid (approx.)', 'Fair private-party range',
          'Read'],
         anchors, [1.35 * inch, 1.35 * inch, 1.4 * inch, fw - 4.1 * inch]))
-    s.append(Spacer(1, 9))
+    s.append(Spacer(1, 7))
+    s.append(P(
+        'One caution specific to the newer cars. On a 2011 the trade-in to private-party spread '
+        'is roughly $5,000 - enormous negotiating room. On a 2016 it is closer to $3,000, and '
+        'the dealer\'s acquisition cost is high enough that they genuinely cannot move as far. '
+        'Expect harder pricing as you move up the years, and do not read firmness on a 2016 as '
+        'bad faith the way you should read it on a 2011.', 'body'))
+    s.append(Spacer(1, 2))
 
     s.append(P('11.2  Total cost of ownership, first year', 'h2'))
     s.append(P('Budget realistically. A $13,000 Wrangler is not a $13,000 commitment.', 'small'))
     tco = [
-        ['Purchase price', '$6,000 - $15,000', ''],
+        ['Purchase price', '$6,000 - $18,000', ''],
         ['Colorado sales tax, title, registration', 'Varies by jurisdiction',
          'Jefferson County rates apply; budget several hundred to over a thousand'],
         ['Independent PPI', '$125 - $269', 'Per vehicle inspected - budget for two, you will '
@@ -1374,7 +1474,8 @@ def section_negotiation(fw):
         ['Expected annual repair', '~$987', 'JK generation average - treat as a running cost, '
          'not a worst case'],
         ['Deferred-maintenance reserve', '$1,000 - $2,000',
-         'Fluids, tyres, brakes, and the first thing the PPI finds'],
+         'Fluids, tyres, brakes, and the first thing the PPI finds. Buying at 2010-2011 money '
+         'instead of 2015-2017 money leaves several thousand more for this.'],
     ]
     s.append(datatable(
         ['Line', 'Amount', 'Note'],
@@ -1399,34 +1500,40 @@ def section_plan(fw):
     steps = [
         ['1', 'Re-run the searches yourself, unblocked',
          'Cars.com, CarGurus, Autotrader and iSeeCars filtered to ZIP 80127, 20-mile radius, '
-         '$6,000-$15,000. These were unreachable from this environment; they will load fine in '
-         'your browser. Expect 30-45 genuine candidates.'],
+         '$6,000-$18,000. These were unreachable from this environment; they will load fine in '
+         'your browser. Filter to 2014-2017 first - that is where the raised ceiling pays off. '
+         'Expect 60-90 genuine candidates across the full band.'],
         ['2', 'Decode every VIN before you contact anyone',
          'vpic.nhtsa.dot.gov for trim and engine, nhtsa.gov/recalls for open recalls. Free, '
          'ninety seconds each. Discard anything whose decoded year contradicts the advert.'],
-        ['3', 'Check the three leads in Section 3.1',
-         '1J4AA2D1XAL173194 (2010 two-door, Lakewood), 1C4AJWAG1CL117007 (2012 two-door, low '
-         'miles, Englewood), 1J4BA6H17BL574757 (2011 Unlimited Rubicon). Confirm they are still '
+        ['3', 'Call AutoNation Chrysler Jeep Broadway first',
+         '5445 S Broadway, Littleton. Ask for stock GL246888 - the 2016 Wrangler from Section '
+         '3.1. Get the full VIN, price and mileage. This is the best-positioned lead in the '
+         'report and it only exists because of the raised ceiling.'],
+        ['4', 'Work the rest of the shortlist',
+         '1C4BJWEG6EL123953 (2014 Unlimited, Englewood), 1C4AJWAG1CL117007 (2012 two-door, low '
+         'miles, Englewood), 1J4AA2D1XAL173194 (2010 two-door, Lakewood). Confirm each is still '
          'listed and get the real mileage and price.'],
-        ['4', 'Filter hard by model year',
-         'Prefer 2010-2011 with the 3.8L and full records, or 2014+ with the 3.6L if you can '
-         'stretch. Treat 2007, 2012 and 2013 as high risk. Any TJ is frame-first.'],
-        ['5', 'Pull factory campaign history by phone',
+        ['5', 'Filter hard by model year',
+         'Target 2015-2017 with the 3.6L. Fall back to 2014, then to a documented 2010-2011 as '
+         'a value play. Treat 2007, 2012 and 2013 as high risk - at this budget you no longer '
+         'need to accept them. Any TJ is frame-first.'],
+        ['6', 'Pull factory campaign history by phone',
          'Any CDJR dealer service department, VIN in hand. Free. Decisive on any 2011-2013 '
          'Pentastar car.'],
-        ['6', 'Buy your own history report',
+        ['7', 'Buy your own history report',
          'CARFAX or AutoCheck - whichever the seller did not provide - plus an NMVTIS title '
          'check. Compare the title brand against the history and treat any disagreement as the '
          'answer.'],
-        ['7', 'Score the seller',
+        ['8', 'Score the seller',
          'Verify the Colorado dealer licence through the DOR lookup, then apply the Section 9.3 '
          'scorecard. Under 60, walk.'],
-        ['8', 'Independent PPI with the Section 10.1 checklist',
+        ['9', 'Independent PPI with the Section 10.1 checklist',
          'Your shop, not theirs. Hand over the checklist. A refusal ends the conversation.'],
-        ['9', 'Negotiate from the inspection findings',
+        ['10', 'Negotiate from the inspection findings',
          'Anchor on the KBB bands in 11.1 and deduct every costed defect. Hold your walk-away '
          'number.'],
-        ['10', 'Before signing',
+        ['11', 'Before signing',
          'Physically match dash plate, door-jamb sticker, frame stamping and title. Get every '
          'verbal promise in writing - the recurring complaint against the largest dealer in '
          'your radius is post-sale paperwork and silence.'],
@@ -1440,12 +1547,14 @@ def section_plan(fw):
     s.append(Spacer(1, 10))
     s.append(callout(
         'The one-line summary',
-        'A documented, inspected <b>2010 or 2011 JK</b> with the 3.8L, complete service records '
-        'and a clean frame is the best risk-adjusted use of $6,000-$15,000 near 80127. The '
-        '3.6L is the better engine, but every 3.6L your budget reaches is a 2012 or 2013 - the '
-        'two worst JK years - and you should only buy one if a dealer confirms the cylinder-head '
-        'history from the VIN.',
-        accent=OLIVE, bg=SAND))
+        'A documented, inspected <b>2015-2017 JK with the 3.6L Pentastar</b> is the best use of '
+        '$6,000-$18,000 near 80127: the best-rated years of the generation, the good engine, '
+        'clear of the cylinder-head defect, and booking at $13,200-$15,800 private-party - '
+        'inside your ceiling with room for tax and inspection. Fall back to a 2014 if nothing '
+        'clean turns up, or to a well-documented 2010-2011 around $11,000-$12,000 if you would '
+        'rather bank the difference. The extra $3,000 over the original budget has bought you '
+        'out of the 2012-2013 compromise entirely - do not spend it going back there.',
+        accent=GREEN, bg=colors.HexColor('#eaf1ea')))
     return s
 
 
@@ -1463,13 +1572,19 @@ def section_sources(fw):
           'cargurus.com - Wrangler inventory near Littleton and Denver',
           'truecar.com - Wrangler listings, Littleton',
           'iseecars.com - Wrangler under $15,000, Denver',
+          'cargurus.com - used 2014 Wrangler, Littleton',
+          'autonationchryslerjeepbroadway.com - used 2016 Wrangler, Littleton',
           'edmunds.com - used Wrangler, Littleton and Denver',
           'autotrader.com - Wrangler, Littleton CO',
           'carfax.com - used Wrangler, Denver CO',
           'autonationchryslerdodgejeepramsouthwest.com - used Wrangler inventory, Littleton']),
         ('Valuation',
-         ['kbb.com - 2011 Wrangler Unlimited Sport, values and depreciation',
-          'kbb.com - 2012 Wrangler Unlimited Sport, values and depreciation']),
+         ['kbb.com - 2011 and 2012 Wrangler Unlimited Sport, values and depreciation',
+          'kbb.com - 2014 Wrangler Unlimited Sport, values',
+          'kbb.com - 2015 Wrangler Unlimited Sport 4D and Sport S 2D, values',
+          'kbb.com - 2016 Wrangler Sport 2D and Unlimited Sport 4D, values',
+          'kbb.com - 2017 Wrangler Sport S 2D, values',
+          'edmunds.com - 2014 Wrangler, Denver average list price and mileage']),
         ('Reliability, defects and recalls',
          ['coveragex.com - Jeep Wrangler problems by year, 2007-2026',
           'jeepjkguide.com - JK common problems by year',
@@ -1497,6 +1612,8 @@ def section_sources(fw):
         ('Dealer standing',
          ['carfax.com - AutoNation CDJR Southwest, Littleton, dealership reviews',
           'bbb.org - AutoNation CDJR Southwest business profile, reviews and complaints',
+          'carfax.com / dealerrater.com / yelp.com - AutoNation Chrysler Jeep Broadway, '
+          'Littleton, dealership reviews',
           'bbb.org - accredited and non-accredited used car dealers, Denver / Littleton / '
           'Lakewood / Englewood',
           'dealerrater.com - CarMax dealership ratings']),

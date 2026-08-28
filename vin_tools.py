@@ -111,10 +111,12 @@ def audit(vin, label=''):
 # --------------------------------------------------------------------------
 CANDIDATES = [
     {
-        'vin': '1J4AA2D1XAL173194',
-        'reported': '2-dr Sport, $10,700, 111,535 mi, Lakewood area',
+        'vin': '1C4BJWEG6EL123953',
+        'reported': 'Unlimited 4-dr, 122,634 mi, 3.6L V6, Englewood. A 2014 Unlimited at '
+                    '147k mi / $15,999 was separately indexed in Englewood.',
         'verdict': 'GO',
-        'note': 'Year matches VIN. Mid-budget, 3.8L. Best-balanced lead. Ask about oil use.',
+        'note': 'Year matches VIN. Brought into range by the $18,000 ceiling, and 2014 is the '
+                'first year clear of the Pentastar head defect. High miles - price accordingly.',
     },
     {
         'vin': '1C4AJWAG1CL117007',
@@ -122,6 +124,13 @@ CANDIDATES = [
         'verdict': 'GO',
         'note': 'Year matches VIN. Lowest mileage found and the good engine, but 2012 is a '
                 'Pentastar cylinder-head year. Get price and head history.',
+    },
+    {
+        'vin': '1J4AA2D1XAL173194',
+        'reported': '2-dr Sport, $10,700, 111,535 mi, Lakewood area',
+        'verdict': 'GO',
+        'note': 'Year matches VIN. Now well under budget, which makes it a value play rather '
+                'than a stretch. 3.8L - ask about oil use.',
     },
     {
         'vin': '1J4BA6H17BL574757',
@@ -155,8 +164,8 @@ CANDIDATES = [
         'vin': '1C4HJXDN9LW170163',
         'reported': 'Unlimited Willys, $23,500, 71,424 mi, Littleton',
         'verdict': 'SKIP',
-        'note': 'Year matches VIN - a genuine 2020 JL. Price is 57% over the $15,000 ceiling. '
-                'Out of scope.',
+        'note': 'Year matches VIN - a genuine 2020 JL. Still 31% over the raised $18,000 '
+                'ceiling. Out of scope.',
     },
 ]
 
