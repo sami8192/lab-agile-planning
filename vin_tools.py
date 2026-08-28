@@ -103,17 +103,61 @@ def audit(vin, label=''):
 
 
 # --------------------------------------------------------------------------
-# Candidates recovered from Colorado listing indexes during research.
+# Candidates recovered from Colorado, California and Texas listing indexes.
 #
 # 'reported' is UNVERIFIED search-snippet data and is reproduced only so it can
 # be challenged against the VIN. Where the snippet's claimed model year
 # contradicts VIN position 10, the VIN wins -- see the report, Section 1.3.
+#
+# 'region' is the market the listing was indexed against, not where the vehicle
+# was built -- every Wrangler here was assembled in Toledo, Ohio.
 # --------------------------------------------------------------------------
 CANDIDATES = [
+    # ---- California: rust-free climate, deepest supply, lowest average price
+    {
+        'vin': '1C4BJWDG6FL569653',
+        'reported': 'Unlimited Sport 4WD, 81,024 mi, La Crescenta CA',
+        'region': 'CA',
+        'verdict': 'GO',
+        'note': 'Year matches VIN. A 2015 Unlimited Sport is the report\'s primary target, and '
+                '81k mi is the lowest of any in-target candidate found. Southern California '
+                'car - no road salt exposure. No price indexed; get it.',
+    },
+    {
+        'vin': '1C4AJWAG9GL189210',
+        'reported': '2-dr Sport 4WD, stock #260383A, 91,322 mi, Upland CA',
+        'region': 'CA',
+        'verdict': 'GO',
+        'note': 'Year matches VIN. 2016 is a best-rated year. Same VDS (AJWAG) as the Englewood '
+                '2012 two-door, which corroborates the trim decode. Inland-empire car, dry '
+                'climate. No price indexed.',
+    },
+    # ---- Texas: huge supply, but the flood-title capital of the search
+    {
+        'vin': '1C4BJWDG2FL735814',
+        'reported': 'Unlimited Willys Wheeler 4WD, stock #TG2FL7358, 84,824 mi, Houston TX',
+        'region': 'TX',
+        'verdict': 'CHECK',
+        'note': 'Year matches VIN and the spec is desirable. But Houston is the epicentre of '
+                'US flood-title risk - run NMVTIS before anything else, and treat a clean '
+                'title as insufficient (Section 9.3).',
+    },
+    {
+        'vin': '1C4HJWDG0FL604925',
+        'reported': 'Unlimited Sport 4x4, Cars & Bids auction, "mostly Texas-owned", '
+                    'off-road modifications',
+        'region': 'TX',
+        'verdict': 'CHECK',
+        'note': 'Year matches VIN. Two compounding risks: online auction (limited recourse, '
+                'often no inspection contingency) and disclosed off-road modification. Badly '
+                'executed lifts cause death wobble outright - see Section 6.4.',
+    },
+    # ---- Colorado: local, inspectable in person, no transport cost
     {
         'vin': '1C4BJWEG6EL123953',
         'reported': 'Unlimited 4-dr, 122,634 mi, 3.6L V6, Englewood. A 2014 Unlimited at '
                     '147k mi / $15,999 was separately indexed in Englewood.',
+        'region': 'CO',
         'verdict': 'GO',
         'note': 'Year matches VIN. Brought into range by the $18,000 ceiling, and 2014 is the '
                 'first year clear of the Pentastar head defect. High miles - price accordingly.',
@@ -121,6 +165,7 @@ CANDIDATES = [
     {
         'vin': '1C4AJWAG1CL117007',
         'reported': '2-dr, 54,371 mi, 3.6L V6, manual, Englewood. No price stated.',
+        'region': 'CO',
         'verdict': 'GO',
         'note': 'Year matches VIN. Lowest mileage found and the good engine, but 2012 is a '
                 'Pentastar cylinder-head year. Get price and head history.',
@@ -128,6 +173,7 @@ CANDIDATES = [
     {
         'vin': '1J4AA2D1XAL173194',
         'reported': '2-dr Sport, $10,700, 111,535 mi, Lakewood area',
+        'region': 'CO',
         'verdict': 'GO',
         'note': 'Year matches VIN. Now well under budget, which makes it a value play rather '
                 'than a stretch. 3.8L - ask about oil use.',
@@ -136,6 +182,7 @@ CANDIDATES = [
         'vin': '1J4BA6H17BL574757',
         'reported': 'Unlimited Rubicon. Indexed twice: $11,899 / 99,127 mi / Denver AND '
                     '$12,599 / 123,567 mi / Centennial.',
+        'region': 'CO',
         'verdict': 'CHECK',
         'note': 'Year matches VIN, but one car cannot have two odometer readings. Establish '
                 'actual mileage before anything else. Rubicon at Sport money is attractive.',
@@ -143,6 +190,7 @@ CANDIDATES = [
     {
         'vin': '1J4BA3H13BL589979',
         'reported': 'Labelled "2023 Wrangler Sport 4xe, $23,991, 43,814 mi, Littleton".',
+        'region': 'CO',
         'verdict': 'CHECK',
         'note': 'VIN proves 2011 Unlimited, not 2023. The price shown belongs to a different '
                 'vehicle. Real car, unknown price - worth a lookup, not a drive.',
@@ -150,6 +198,7 @@ CANDIDATES = [
     {
         'vin': '1J4FA49S46P788486',
         'reported': 'Labelled "2023 Wrangler Sahara, 42,483 mi, Aurora".',
+        'region': 'CO',
         'verdict': 'SKIP',
         'note': 'VIN proves a 2006 TJ Sport, 4.0L. Credible buy in principle, but indexed '
                 'against a Colorado Springs listing - outside the 20-mile radius.',
@@ -157,12 +206,14 @@ CANDIDATES = [
     {
         'vin': '1J4FA49S31P347487',
         'reported': 'Labelled "2022 Wrangler Sahara, $28,549, 50,425 mi, Colorado Springs".',
+        'region': 'CO',
         'verdict': 'SKIP',
         'note': 'VIN proves a 2001 TJ Sport, 4.0L - off by 21 model years. Outside radius.',
     },
     {
         'vin': '1C4HJXDN9LW170163',
         'reported': 'Unlimited Willys, $23,500, 71,424 mi, Littleton',
+        'region': 'CO',
         'verdict': 'SKIP',
         'note': 'Year matches VIN - a genuine 2020 JL. Still 31% over the raised $18,000 '
                 'ceiling. Out of scope.',

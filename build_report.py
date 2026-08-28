@@ -77,7 +77,7 @@ S = {
                  textColor=INK, spaceAfter=3),
     'callb': _st('callb', fontName='Helvetica', fontSize=9.1, leading=12.8,
                  textColor=BODY),
-    'toc': _st('toc', fontName='Helvetica', fontSize=9.5, leading=13,
+    'toc': _st('toc', fontName='Helvetica', fontSize=9.2, leading=12,
                textColor=BODY),
     'cover_lbl': _st('cover_lbl', fontName='Helvetica-Bold', fontSize=8,
                      leading=11, textColor=OLIVE_LT),
@@ -200,7 +200,7 @@ def _inner(canvas, doc):
     canvas.setFillColor(GREY)
     canvas.drawString(MARGIN, PAGE_H - 0.55 * inch, REPORT_TITLE)
     canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 0.55 * inch,
-                           'ZIP 80127  |  20 mi  |  $6,000-$18,000')
+                           '80127 + CA + TX  |  $6,000-$18,000')
     canvas.line(MARGIN, 0.66 * inch, PAGE_W - MARGIN, 0.66 * inch)
     canvas.setFont('Helvetica', 7.4)
     canvas.drawString(MARGIN, 0.5 * inch, date.today().strftime('%B %d, %Y'))
@@ -217,7 +217,8 @@ def build(path):
         topMargin=0.85 * inch, bottomMargin=0.85 * inch,
         title=REPORT_TITLE,
         author='Vehicle research brief',
-        subject='Used Jeep Wrangler acquisition analysis, ZIP 80127, $6,000-$18,000')
+        subject='Used Jeep Wrangler acquisition analysis, ZIP 80127 plus California and '
+                'Texas, $6,000-$18,000')
 
     fw = PAGE_W - 2 * MARGIN
     cover_frame = Frame(MARGIN, MARGIN, fw, PAGE_H - 2 * MARGIN, id='cover',
@@ -239,6 +240,7 @@ def story(fw):
     s.append(PageBreak())
     s += section_method(fw)
     s += section_market(fw)
+    s += section_multistate(fw)
     s += section_candidates(fw)
     s += section_vin(fw)
     s += section_generations(fw)
@@ -254,7 +256,7 @@ def story(fw):
 
 
 def cover(fw):
-    s = [Spacer(1, 1.18 * inch)]
+    s = [Spacer(1, 0.92 * inch)]
     s.append(P('VEHICLE ACQUISITION RESEARCH', 'cover_lbl'))
     s.append(Spacer(1, 5))
     s.append(P('Jeep Wrangler', 'title'))
@@ -263,11 +265,13 @@ def cover(fw):
 
     facts = [
         ['SEARCH ORIGIN', 'ZIP 80127 - Ken Caryl / Littleton, Jefferson County, Colorado'],
-        ['RADIUS', '20 miles (covers Littleton, Lakewood, Englewood, Morrison, Golden,\n'
-                   'Wheat Ridge, Arvada, Centennial, Denver metro south and west)'],
+        ['RADIUS', '20 miles local (Littleton, Lakewood, Englewood, Morrison, Golden,\n'
+                   'Wheat Ridge, Arvada, Centennial, Denver metro south and west),\n'
+                   'extended to California and Texas for remote sourcing'],
         ['BUDGET', '$6,000 - $18,000'],
         ['SCOPE', 'VIN authentication - vehicle history exposure - generation and\n'
-                  'model-year reliability - seller and dealer reliability'],
+                  'model-year reliability - seller and dealer reliability -\n'
+                  'multi-state market comparison and landed cost'],
         ['REPORT DATE', date.today().strftime('%B %d, %Y')],
     ]
     rows = [[Paragraph(k, S['cover_lbl']),
@@ -299,17 +303,18 @@ def cover(fw):
     contents = [
         '1.  Method, evidence grading, and what this report can and cannot prove',
         '2.  What $6,000-$18,000 actually buys near 80127',
-        '3.  VIN-authenticated candidate vehicles',
-        '4.  Jeep Wrangler VIN decoding reference',
-        '5.  Generation deep-dive: TJ, JK 3.8L, JK 3.6L',
-        '6.  Model-year risk matrix',
-        '7.  Recalls, warranty extensions, and the VIN checks to run',
-        '8.  Colorado-specific risk: mag chloride, hail, and title washing',
-        '9.  Seller and dealer reliability assessment',
-        '10. Pre-purchase inspection protocol',
-        '11. Price anchoring and negotiation',
-        '12. Action plan',
-        '13. Sources',
+        '3.  Sourcing from California and Texas',
+        '4.  VIN-authenticated candidate vehicles',
+        '5.  Jeep Wrangler VIN decoding reference',
+        '6.  Generation deep-dive: TJ, JK 3.8L, JK 3.6L',
+        '7.  Model-year risk matrix',
+        '8.  Recalls, warranty extensions, and the VIN checks to run',
+        '9.  Regional risk: Colorado, California, Texas',
+        '10.  Seller and dealer reliability assessment',
+        '11. Pre-purchase inspection protocol',
+        '12. Price anchoring and negotiation',
+        '13. Action plan',
+        '14. Sources',
     ]
     s.append(P('<b>CONTENTS</b>', 'cover_lbl'))
     s.append(Spacer(1, 3))
@@ -372,7 +377,7 @@ def section_method(fw):
         'about <b>1 time in 11</b>. Seven distinct VINs were recovered and <b>all seven '
         'passed</b>. The probability of that happening by chance is roughly 1 in 19 million. '
         'These are real, factory-issued VINs. The full validator source is reproduced in '
-        'Section 4.4 so you can re-run it yourself.',
+        'Section 5.4 so you can re-run it yourself.',
         accent=GREEN, bg=colors.HexColor('#eaf1ea')))
 
     s.append(P('1.3  Where the search layer was caught being wrong', 'h2'))
@@ -437,7 +442,7 @@ def section_market(fw):
         'buy - it is a change of category. At $15,000 every 3.6L Pentastar within reach was a '
         '2012 or 2013, the two worst-rated JK model years. At $18,000 the <b>2015-2017</b> JKs '
         '- consistently the best-rated of the entire generation - come inside private-party '
-        'money. That reverses the central recommendation of the $15,000 analysis, and Section 6 '
+        'money. That reverses the central recommendation of the $15,000 analysis, and Section 7 '
         'sets out the new one.',
         accent=GREEN, bg=colors.HexColor('#eaf1ea')))
 
@@ -551,21 +556,258 @@ def section_market(fw):
         'body'))
     s.append(P(
         'The practical effect: you can afford to be ruthless. Walk away from anything that '
-        'fails a check in Section 10 - there will be another one next week, and now there '
+        'fails a check in Section 11 - there will be another one next week, and now there '
         'will be several.', 'body'))
     return s
 
 
-# ---------------------------------------------------------- 3. candidates
-def section_candidates(fw):
-    s = [CondPageBreak(3.1 * inch), P('3.  VIN-authenticated candidate vehicles', 'h1'), rule()]
+# ---------------------------------------------------------- 3. multi-state
+def section_multistate(fw):
+    s = [CondPageBreak(3.1 * inch),
+         P('3.  Sourcing from California and Texas', 'h1'), rule()]
+
+    s.append(callout(
+        'What this section assumes',
+        'That you are still based at 80127 and are widening where you <b>source</b> a vehicle - '
+        'buying in California or Texas and bringing it to Colorado. Everything here is written '
+        'for that case: landed cost, remote inspection, and Colorado titling. If instead you '
+        'are relocating to one of those states, the vehicle analysis in Sections 6-8 carries '
+        'over unchanged, but Section 3.7 (Colorado registration) does not apply and Section '
+        '10.2 gains a state DMV you should substitute in.',
+        accent=OLIVE, bg=SAND))
+
+    s.append(P('3.1  Three reasons to extend, honestly ranked', 'h2'))
+    s.append(bullets([
+        '<b>Selection, by an order of magnitude.</b> Littleton lists 114 Wranglers in total. '
+        'California lists <b>4,955 of the 2015 model year alone</b>. Houston holds over 1,165 '
+        'Wranglers and Dallas over 1,345. When you are hunting a specific configuration - a '
+        '2015-2017 Unlimited, low miles, unmodified, clean history - that difference is the '
+        'whole argument.',
+        '<b>Price, but not where you would expect it.</b> California statewide averages '
+        '<b>$16,889</b> for a 2015 Wrangler. Texas is <i>more</i> expensive, not less. See 3.2.',
+        '<b>Corrosion - real, but smaller than the internet will tell you.</b> See 3.3 before '
+        'you pay a transport bill for it.',
+    ]))
+
+    s.append(P('3.2  Market comparison', 'h2'))
+    s.append(P('Average list prices and supply, graded <b>REPORTED</b>. Note the model year '
+               'differs by row - each is the year that market published.', 'small'))
+    mkt = [
+        ['<b>California</b> (statewide)', '2015', '<b>$16,889</b>', '-', '<b>4,955</b>',
+         'Cheapest and deepest market found for the target year.'],
+        ['Sacramento, CA', '2015', '$17,318', '107,574', '-',
+         'Northern California; higher miles than the LA basin.'],
+        ['Los Angeles, CA', '2016', '$18,486', '95,140', '-',
+         'Premium metro pricing, but lower mileage.'],
+        ['Houston, TX', '2015', '$17,727 - $18,106', '-', '428 - 446',
+         'Deep supply. Also the highest flood-title risk in this report (3.4).'],
+        ['Dallas, TX', '2015', '$18,370', '94,021', '-',
+         'Most expensive market surveyed. Lower flood exposure than Houston.'],
+        ['Denver, CO', '2014', '$17,531', '110,014', '-',
+         'Highest average mileage of any market here.'],
+        ['Littleton, CO', 'all', '-', '-', '114',
+         'Your local pool - smallest by a wide margin.'],
+    ]
+    s.append(datatable(
+        ['Market', 'MY', 'Avg list price', 'Avg miles', 'Listings', 'Read'],
+        [[Paragraph(m[0], S['cell'])] + [Paragraph(x, S['cell']) for x in m[1:]] for m in mkt],
+        [1.15 * inch, 0.46 * inch, 1.02 * inch, 0.62 * inch, 0.60 * inch, fw - 3.85 * inch],
+        aligns=[('ALIGN', (1, 1), (4, -1), 'CENTER')]))
+    s.append(Spacer(1, 8))
+    s.append(callout(
+        'The counterintuitive finding',
+        'California is normally the expensive place to buy anything, and Texas the cheap one. '
+        'For Wranglers it is the other way round. California statewide averages <b>$16,889</b> '
+        'for a 2015 against Dallas at <b>$18,370</b> - a spread of roughly $1,500 in '
+        'California\'s favour, on top of five times the inventory. Texas Wrangler prices are '
+        'held up by exactly the demand you would expect in a truck state. '
+        '<b>If you extend in only one direction, extend to California.</b>',
+        accent=GREEN, bg=colors.HexColor('#eaf1ea')))
+
+    s.append(P('3.3  The corrosion argument, calibrated', 'h2'))
     s.append(P(
-        'Eight complete VINs were recovered from Colorado listing pages, including one 2014 '
-        'Unlimited brought into scope by the raised ceiling. All eight pass the check digit, '
-        'so all eight are genuine factory VINs. The left half of this table is '
-        '<b>VERIFIED</b> - computed from the VIN itself, offline. The right half is '
-        '<b>REPORTED</b> - what a search snippet claimed, which Section 1.3 shows is '
-        'unreliable.', 'body'))
+        'The standard advice - "buy a southern truck, avoid the rust" - is aimed at buyers in '
+        'the Rust Belt, where roads are treated with rock salt. You are not one of them, and '
+        'the advice is weaker than it looks in your case.', 'body'))
+    s.append(bullets([
+        '<b>Colorado does not use rock salt.</b> It uses liquid magnesium chloride. That is '
+        'still a salt and Section 9.1 does not retract a word of what it says about it - it is '
+        'hygroscopic, it holds moisture against metal, and it attacks aluminium, magnesium and '
+        'paint finishes. But it is <b>less corrosive than sodium chloride</b>, and Colorado\'s '
+        'climate is dry.',
+        '<b>So a Colorado Wrangler is not a Michigan Wrangler.</b> The gap between a Colorado '
+        'car and a California car is real but modest. The gap between a Colorado car and an '
+        'Ohio car is enormous. Do not price the first as though it were the second.',
+        '<b>The genuinely rust-free zones are Arizona, central and southern New Mexico, and '
+        'West Texas</b> - dry, and largely untreated. Coastal and East Texas is humid, and '
+        'Houston adds salt air and flooding. A Houston Jeep is not automatically a dry Jeep.',
+    ]))
+    s.append(P(
+        '<b>Practical conclusion:</b> let corrosion break a tie between two otherwise equal '
+        'cars. Do not let it justify a $900 transport bill on its own when the Colorado '
+        'alternative is inspectable in person. What corrosion <i>should</i> do is push you '
+        'hard toward a TJ from California over a TJ from anywhere else, because Section 6.1 '
+        'establishes that frame rot on a TJ is a structural write-off rather than a repair.',
+        'body'))
+
+    s.append(P('3.4  Texas: the flood problem', 'h2'))
+    s.append(P(
+        'Extending to Texas swaps one regional hazard for another, and the Texas one is worse.',
+        'body'))
+    flood = [
+        ['Scale', 'Texas is one of the top three states nationally for flooded vehicles, '
+                  'alongside Florida and Kentucky. Roughly <b>482,000 water-damaged cars '
+                  'returned to the road in 2025</b>; tropical storms between June and August '
+                  '2025 alone damaged 45,000. Hurricanes Harvey and Irma together damaged over '
+                  '<b>637,000 vehicles</b>.'],
+        ['The law', 'Texas requires the words <b>"Flood Damage"</b> on the title, and failing '
+                    'to disclose damage to a buyer may violate the Texas Deceptive Trade '
+                    'Practices Act.'],
+        ['The gap', 'If the owner had no comprehensive cover, or the repair bill fell below the '
+                    'threshold, <b>the vehicle may never be branded at all</b>. Uninsured flood '
+                    'cars are cleaned up and sold with no documentary trace. This is structurally '
+                    'the same trap as Colorado hail (Section 9.2) - and it is why a clean title '
+                    'is evidence of very little.'],
+        ['The defence', 'Run <b>NMVTIS</b>. It is the federal title database that states report '
+                        'into and is queried before a state issues a new title, which makes a '
+                        'flood brand far harder to wash out than it is from a commercial history '
+                        'report. Then inspect physically for it - see Section 11.1.'],
+    ]
+    s.append(datatable(
+        ['', ''],
+        [[Paragraph('<b>%s</b>' % a, S['cell']), Paragraph(b, S['cell'])] for a, b in flood],
+        [0.82 * inch, fw - 0.82 * inch]))
+    s.append(Spacer(1, 8))
+    s.append(P(
+        '<b>Practical conclusion:</b> prefer <b>Dallas, Fort Worth, Austin and West Texas</b> '
+        'over Houston and the Gulf Coast. If you do look at a Houston car, NMVTIS is not '
+        'optional and neither is a physical flood inspection.', 'body'))
+
+    s.append(P('3.5  California: what to watch instead', 'h2'))
+    s.append(bullets([
+        '<b>Smog is not your problem.</b> California emissions rules bind people registering '
+        '<i>in</i> California. You are registering in Colorado. A California car carries '
+        'CARB-specification emissions equipment, which is a superset of federal - it is legal '
+        'in Colorado and will not obstruct you.',
+        '<b>Colorado emissions still apply.</b> ZIP 80127 sits in Jefferson County, inside the '
+        'Denver-Boulder emissions programme area, so the vehicle must pass a Colorado emissions '
+        'test before you can register it regardless of where you bought it.',
+        '<b>Sun damage replaces rust as the wear signature.</b> California Wranglers bake. '
+        'Inspect the soft top and its windows for hazing and splits, the dashboard for cracking, '
+        'the paint and clear coat for chalking, and every rubber seal for perishing. A hardtop '
+        'that has spent fifteen years in the Inland Empire is a different object from one that '
+        'lived in a Denver garage.',
+        '<b>Modification density is high.</b> California and Colorado are both heavy off-road '
+        'markets. Section 11.1 covers what a badly executed lift does; apply it with extra care '
+        'to anything advertised as "built".',
+    ]))
+
+    s.append(P('3.6  Landed cost: what the car actually costs you', 'h2'))
+    s.append(P(
+        'An out-of-state car is never its sticker price. Two ways to get it home:', 'body'))
+    land = [
+        ['<b>Ship it</b> (open carrier)', 'CA to CO: <b>$690 - $1,077</b> Los Angeles to Denver; '
+         'broader range $400 - $1,100.<br/>TX to CO: <b>$700 - $1,000</b>, typically 2-3 days.',
+         'Enclosed transport roughly doubles it (CA $700-$1,400; TX $1,225-$1,750) and is not '
+         'warranted for a used Wrangler. SUVs price above sedans, and a lifted Jeep on oversized '
+         'tyres may attract a surcharge - declare the real height and width when quoting.'],
+        ['<b>Fly and drive</b>', 'Roughly <b>$400 - $700</b> all-in: one-way fare, fuel, and a '
+         'night on the road.',
+         'Los Angeles to Denver is about 1,020 miles; Houston to Denver about 1,030. Slower and '
+         'more effort - but you inspect the car yourself before money moves, and you get a '
+         '1,000-mile shakedown that will surface a death wobble, an overheat, an oil habit or a '
+         'transmission fault long before a transporter would. <b>Usually the better choice on '
+         'both cost and diligence.</b>'],
+    ]
+    s.append(datatable(
+        ['Method', 'Cost', 'Assessment'],
+        [[Paragraph(a, S['cell']), Paragraph(b, S['cell']), Paragraph(c, S['cell'])]
+         for a, b, c in land],
+        [1.15 * inch, 1.55 * inch, fw - 2.7 * inch]))
+    s.append(Spacer(1, 8))
+    s.append(P(
+        'Add the transport figure to the asking price before you compare anything against a '
+        'Colorado car. A $15,500 California Wrangler shipped to Denver is a <b>$16,400</b> '
+        'Wrangler, and that is before a remote inspection. Against the California price '
+        'advantage of roughly $1,500 identified in 3.2, shipping consumes most of the margin - '
+        'which is precisely why flying out to collect it is the stronger play.', 'body'))
+
+    s.append(P('3.7  Registering an out-of-state purchase in Colorado', 'h2'))
+    reg = [
+        ['VIN verification', 'Form <b>DR 2698</b> is required for any vehicle brought in from '
+         'out of state. The inspection must be performed by a law enforcement officer, a '
+         'licensed Colorado dealer, or a licensed Colorado emissions testing station agent.'],
+        ['Emissions test', 'Required - Jefferson County is inside the Denver-Boulder programme '
+         'area. Fully electric vehicles are exempt statewide; nothing in this report is one.'],
+        ['At the county office', 'Secure and verifiable ID; <b>two</b> proofs of address; the '
+         'out-of-state title signed by the seller; the completed DR 2698; and proof of valid '
+         'Colorado liability insurance.'],
+        ['Sales tax', 'Paid to Colorado at your local rate, not to the state you bought in. '
+         'Budget it against the purchase price, not the advertised price.'],
+        ['Odometer disclosure', 'On a remote sale this requires <b>original signatures</b> from '
+         'both parties. A standard power of attorney is not accepted for it - only a Secure '
+         'Power of Attorney. Get this right or the title transfer stalls.'],
+    ]
+    s.append(datatable(
+        ['Requirement', 'Detail'],
+        [[Paragraph('<b>%s</b>' % a, S['cell']), Paragraph(b, S['cell'])] for a, b in reg],
+        [1.32 * inch, fw - 1.32 * inch]))
+    s.append(Spacer(1, 8))
+
+    s.append(P('3.8  Buying remotely without getting burned', 'h2'))
+    s.append(P(
+        'Distance removes almost every natural check on a bad transaction. These are '
+        'non-negotiable:', 'body'))
+    s.append(bullets([
+        '<b>Independent PPI first, money second.</b> A shop <i>you</i> chose and <i>you</i> '
+        'paid, near the seller. Never the seller\'s shop, never the selling dealer\'s service '
+        'department. Give them the checklist in Section 11.1 and ask for photographs of all '
+        'three VIN plates - dash, door jamb and frame stamping.',
+        '<b>Live video, not a recording.</b> Ask for a walkaround on a live call. Have them '
+        'start the engine <i>cold</i> in front of you, pan the undercarriage, and hold the '
+        'camera on the VIN plates and the odometer. A seller who will only send edited clips '
+        'is telling you something.',
+        '<b>Title in the seller\'s name, matching their ID.</b> Photographed, before you '
+        'travel. A mismatch means an unlicensed dealer and no consumer protection.',
+        '<b>Never wire funds to an individual.</b> Bank-to-bank at closing, or a genuine escrow '
+        'service you selected. Any request for gift cards, cryptocurrency, or a "shipping '
+        'company escrow" the seller recommends is a scam without exception.',
+        '<b>Vet the transporter.</b> FMCSA-licensed, insured and bonded. Insist on a signed '
+        'Bill of Lading with condition notes and photographs at <i>both</i> pickup and '
+        'delivery - it is your only recourse for transit damage.',
+    ]))
+
+    s.append(callout(
+        'Section verdict',
+        '<b>California is the extension worth making.</b> Five times the inventory of the '
+        'target years, the lowest average price of any market surveyed, a dry climate, and none '
+        'of the flood exposure. Search it as your primary market for a 2015-2017. '
+        '<br/><br/>'
+        '<b>Texas is conditional.</b> The supply is enormous but prices are the highest of the '
+        'three states and the flood-title risk is the worst. Go there for a specific car that '
+        'justifies it, prefer Dallas / Fort Worth / Austin over Houston, and treat NMVTIS as '
+        'mandatory. '
+        '<br/><br/>'
+        '<b>Colorado stays the default for anything you can drive to.</b> Once you add $700-'
+        '$1,000 of transport and a remote inspection, the out-of-state price advantage largely '
+        'evaporates - and you lose the ability to put your own hands on the car. The honest '
+        'ranking is: <b>a clean local car you inspected yourself beats a cheaper remote one</b>, '
+        'and the remote markets are there to give you options when the local pool of 114 does '
+        'not contain what you want.',
+        accent=OLIVE, bg=SAND))
+    return s
+
+
+# ---------------------------------------------------------- 4. candidates
+def section_candidates(fw):
+    s = [CondPageBreak(3.1 * inch), P('4.  VIN-authenticated candidate vehicles', 'h1'), rule()]
+    s.append(P(
+        'Twelve complete VINs were recovered across the three markets - four in California and '
+        'Texas, eight in Colorado. <b>All twelve pass the check digit</b>, and for every one of '
+        'the four out-of-state cars the claimed model year matches the year encoded in VIN '
+        'position 10. The left half of this table is <b>VERIFIED</b> - computed from the VIN '
+        'itself, offline. The right half is <b>REPORTED</b> - what a search snippet claimed, '
+        'which Section 1.3 shows is unreliable.', 'body'))
 
     rows = []
     for c in CANDIDATES:
@@ -573,24 +815,25 @@ def section_candidates(fw):
         want, err = check_digit(c['vin'])
         assert not err and want == c['vin'][8], 'VIN failed at build time: %s' % c['vin']
         verdict_col = {'GO': GREEN, 'CHECK': AMBER, 'SKIP': RUST}[c['verdict']]
+        region_col = {'CA': OLIVE, 'TX': RUST, 'CO': GREY}[c['region']]
         rows.append([
             Paragraph(c['vin'], S['mono']),
             tag('PASS', GREEN),
             Paragraph('<b>%s</b>' % d['year'], S['cell']),
-            Paragraph(d['plant_short'], S['cell']),
+            tag(c['region'], region_col),
             Paragraph(c['reported'], S['cell']),
             Paragraph('<font color="%s"><b>%s</b></font><br/>%s'
                       % (hx(verdict_col), c['verdict'], c['note']), S['cell']),
         ])
     s.append(datatable(
-        ['VIN', 'Chk', 'Yr', 'Plant', 'Reported listing data (UNVERIFIED)',
+        ['VIN', 'Chk', 'Yr', 'Mkt', 'Reported listing data (UNVERIFIED)',
          'Assessment'],
         rows,
-        [1.42 * inch, 0.52 * inch, 0.42 * inch, 0.68 * inch, 1.62 * inch,
-         fw - 4.66 * inch]))
+        [1.42 * inch, 0.52 * inch, 0.42 * inch, 0.42 * inch, 1.68 * inch,
+         fw - 4.46 * inch]))
     s.append(Spacer(1, 9))
 
-    s.append(P('3.1  Partial VINs from dealer stock numbers', 'h2'))
+    s.append(P('4.1  Partial VINs from dealer stock numbers', 'h2'))
     s.append(P(
         'Franchise dealers almost always set the advertised stock number to the '
         '<b>last eight characters of the VIN</b>. That convention leaks the model year and '
@@ -606,7 +849,7 @@ def section_candidates(fw):
          'Sport with 93,066 mi and service records was separately described at this dealer.'],
         ['DL645044', 'D = 2013, L = Toledo South',
          'Reported as a 2013 Wrangler Sahara, "Rock Lobster" orange, 73,495 mi. A 2013 is a '
-         '3.6L Pentastar car - see Section 5.3 before you get attached to it.'],
+         '3.6L Pentastar car - see Section 6.3 before you get attached to it.'],
     ]
     s.append(datatable(
         ['Stock #', 'Decodes to', 'Lead'],
@@ -616,32 +859,38 @@ def section_candidates(fw):
     s.append(Spacer(1, 9))
 
     s.append(callout(
-        'Shortlist: where to spend your first four phone calls',
-        [P('<b>1. Stock GL246888</b> - 2016 Wrangler at AutoNation Chrysler Jeep Broadway, '
+        'Shortlist: where to spend your first five phone calls',
+        [P('<b>1. 1C4BJWDG6FL569653</b> - 2015 Unlimited Sport, 81,024 mi, La Crescenta CA. '
+           'The lowest mileage of any in-target candidate in this report, in the exact model '
+           'year and trim Section 7 identifies as the target, from the cheapest and deepest '
+           'market. No price was indexed. <i>Ask: price, and whether they will hold it for an '
+           'independent PPI.</i>', 'callb'),
+         Spacer(1, 4),
+         P('<b>2. Stock GL246888</b> - 2016 Wrangler at AutoNation Chrysler Jeep Broadway, '
            'Littleton. Not a full VIN, but the strongest lead here: a best-rated model year, '
            'the good engine, at a franchise Jeep store eight miles from 80127. Only the raised '
            'ceiling puts this in play. <i>Ask: the full VIN, the price, and the mileage.</i>',
            'callb'),
          Spacer(1, 4),
-         P('<b>2. 1C4BJWEG6EL123953</b> - 2014 Unlimited four-door, reported 122,634 mi, 3.6L, '
+         P('<b>3. 1C4BJWEG6EL123953</b> - 2014 Unlimited four-door, reported 122,634 mi, 3.6L, '
            'Englewood. The first model year clear of the Pentastar cylinder-head defect. The '
            'mileage is high and a 2014 Unlimited Sport books at $12,200-$14,450 private-party, '
            'so anything near $18,000 is overpriced. <i>Ask: price, and service history for the '
            'last 30,000 miles.</i>', 'callb'),
          Spacer(1, 4),
-         P('<b>3. 1C4AJWAG1CL117007</b> - 2012 two-door, reported 54,371 mi, 3.6L manual, '
+         P('<b>4. 1C4AJWAG1CL117007</b> - 2012 two-door, reported 54,371 mi, 3.6L manual, '
            'Englewood. By far the lowest mileage recovered. Worth a call purely for that, but '
            '2012 is a Pentastar cylinder-head year and the raised budget means you no longer '
            '<i>have</i> to accept that risk. <i>Ask: price, and whether the left cylinder head '
            'has ever been replaced.</i>', 'callb'),
          Spacer(1, 4),
-         P('<b>4. 1J4AA2D1XAL173194</b> - 2010 two-door, reported $10,700 / 111,535 mi, '
+         P('<b>5. 1J4AA2D1XAL173194</b> - 2010 two-door, reported $10,700 / 111,535 mi, '
            'Lakewood. No longer the safe compromise it was at a $15,000 ceiling - now the '
            'deliberate value play, leaving roughly $7,000 of headroom for maintenance. '
            '<i>Ask: oil consumption over the last 5,000 miles.</i>', 'callb')],
         accent=OLIVE, bg=SAND))
 
-    s.append(P('3.2  Vehicles to drop now', 'h2'))
+    s.append(P('4.2  Vehicles to drop now', 'h2'))
     s.append(bullets([
         '<b>1C4HJXDN9LW170163</b> - genuinely a 2020 JL Willys, but reported at $23,500. Even '
         'at the raised ceiling that is 31% over. Out of scope, and the gap is too wide to '
@@ -660,14 +909,14 @@ def section_candidates(fw):
 
 # ---------------------------------------------------------- 4. VIN reference
 def section_vin(fw):
-    s = [CondPageBreak(3.1 * inch), P('4.  Jeep Wrangler VIN decoding reference', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('5.  Jeep Wrangler VIN decoding reference', 'h1'), rule()]
     s.append(P(
         'You will encounter VINs this report has never seen. This section makes you '
         'self-sufficient: read any Wrangler VIN off a windshield or a door jamb and know the '
         'year, the plant, and whether the seller is telling you the truth about the car.',
         'body'))
 
-    s.append(P('4.1  Position map', 'h2'))
+    s.append(P('5.1  Position map', 'h2'))
     pos = [
         ['1-3', 'WMI - World Manufacturer Identifier',
          '<b>1J4</b> = Jeep multipurpose vehicle, US-built (through MY2011). '
@@ -717,7 +966,7 @@ def section_vin(fw):
         'it will not be blocked from yours.',
         accent=AMBER, bg=colors.HexColor('#f7f1de')))
 
-    s.append(P('4.2  Model-year codes (position 10)', 'h2'))
+    s.append(P('5.2  Model-year codes (position 10)', 'h2'))
     yr = [['V', '1997'], ['W', '1998'], ['X', '1999'], ['Y', '2000'], ['1', '2001'],
           ['2', '2002'], ['3', '2003'], ['4', '2004'], ['5', '2005'], ['6', '2006'],
           ['7', '2007'], ['8', '2008'], ['9', '2009'], ['A', '2010'], ['B', '2011'],
@@ -748,7 +997,7 @@ def section_vin(fw):
         'year codes, and I, O and Q never appear anywhere in a VIN - they are too easily '
         'confused with 1 and 0. A "VIN" containing any of them is not a VIN.', 'small'))
 
-    s.append(P('4.3  Running the check digit by hand', 'h2'))
+    s.append(P('5.3  Running the check digit by hand', 'h2'))
     s.append(P(
         'Transliterate every character to a number, multiply each by its positional weight, '
         'sum the products, divide by 11, and keep the remainder. A remainder of 10 is written '
@@ -773,11 +1022,11 @@ def section_vin(fw):
     s.append(Spacer(1, 5))
     s.append(P(
         'Position 9 carries weight 0, so the check digit never influences its own calculation. '
-        'Worked example on the 2010 two-door from Section 3: '
+        'Worked example on the 2010 two-door from Section 4: '
         '<b>1J4AA2D1XAL173194</b> sums to a remainder of 10, which is written <b>X</b> - and '
         'X is exactly what sits in position 9. It passes.', 'body'))
 
-    s.append(P('4.4  Reproducible validator', 'h2'))
+    s.append(P('5.4  Reproducible validator', 'h2'))
     s.append(P(
         'The complete implementation used to authenticate every VIN in this report ships '
         'alongside it as <b>vin_tools.py</b>. Run it against any VIN a seller gives you:',
@@ -813,9 +1062,9 @@ def section_vin(fw):
 
 # ---------------------------------------------------------- 5. generations
 def section_generations(fw):
-    s = [CondPageBreak(3.1 * inch), P('5.  Generation deep-dive', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('6.  Generation deep-dive', 'h1'), rule()]
 
-    s.append(P('5.1  TJ, 1997-2006 - the 4.0L is immortal, the frame is not', 'h2'))
+    s.append(P('6.1  TJ, 1997-2006 - the 4.0L is immortal, the frame is not', 'h2'))
     s.append(P(
         'The 4.0-litre AMC-derived inline six is the most durable engine ever fitted to a '
         'Wrangler. Simple, under-stressed, cheap to work on, and routinely seen past 250,000 '
@@ -845,7 +1094,7 @@ def section_generations(fw):
         'proven innocent.',
         accent=RUST))
 
-    s.append(P('5.2  JK with the 3.8L V6, 2007-2011 - comfortable, gutless, thirsty', 'h2'))
+    s.append(P('6.2  JK with the 3.8L V6, 2007-2011 - comfortable, gutless, thirsty', 'h2'))
     s.append(P(
         'The JK brought coil springs, a proper interior, and crucially the four-door '
         'Unlimited. The engine it launched with was a minivan V6 pressed into service: 202 '
@@ -868,7 +1117,7 @@ def section_generations(fw):
         '<b>Death wobble.</b> See 5.4.',
     ]))
 
-    s.append(P('5.3  JK with the 3.6L Pentastar, 2012 onward - the good engine, the bad years',
+    s.append(P('6.3  JK with the 3.6L Pentastar, 2012 onward - the good engine, the bad years',
                'h2'))
     s.append(P(
         'The 2012 Pentastar swap took the JK from 202 hp to 285 hp and transformed the '
@@ -899,7 +1148,7 @@ def section_generations(fw):
         'the known defect has already been bought out at someone else\'s expense.',
         accent=OLIVE, bg=SAND))
 
-    s.append(P('5.4  Death wobble - what it actually is', 'h2'))
+    s.append(P('6.4  Death wobble - what it actually is', 'h2'))
     s.append(P(
         'Death wobble affects the entire JK run, 2007 through 2018. It presents as violent, '
         'self-sustaining oscillation of the front axle, typically triggered between 45 and 65 '
@@ -918,7 +1167,7 @@ def section_generations(fw):
         'patches and drive over them deliberately. A seller who steers around every bump on '
         'the test route is managing your impressions. Insist on the route you choose.', 'body'))
 
-    s.append(P('5.5  Overall generation reliability', 'h2'))
+    s.append(P('6.5  Overall generation reliability', 'h2'))
     s.append(P(
         'Aggregated owner data puts the JK generation at roughly <b>2.8 out of 5</b> for '
         'reliability with an average annual repair cost near <b>$987</b>. Frame that number '
@@ -930,7 +1179,7 @@ def section_generations(fw):
 
 # ---------------------------------------------------------- 6. year risk
 def section_yearrisk(fw):
-    s = [CondPageBreak(3.1 * inch), P('6.  Model-year risk matrix', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('7.  Model-year risk matrix', 'h1'), rule()]
     s.append(P(
         'Ranked for a buyer working in the $6,000-$18,000 band. At a $15,000 ceiling this '
         'matrix was an exercise in damage limitation - the reachable years were largely the '
@@ -1001,7 +1250,7 @@ def section_yearrisk(fw):
 
 # ---------------------------------------------------------- 7. recalls
 def section_recalls(fw):
-    s = [P('7.  Recalls, warranty extensions, and the VIN checks to run', 'h1'), rule()]
+    s = [P('8.  Recalls, warranty extensions, and the VIN checks to run', 'h1'), rule()]
     s.append(P(
         'Recalls are free to fix, permanently attached to the VIN, and never expire. An open '
         'recall on a fifteen-year-old Jeep is still the manufacturer\'s obligation. This is '
@@ -1029,7 +1278,7 @@ def section_recalls(fw):
         [1.28 * inch, 1.55 * inch, fw - 2.83 * inch]))
     s.append(Spacer(1, 9))
 
-    s.append(P('7.1  Free VIN checks to run on every serious candidate', 'h2'))
+    s.append(P('8.1  Free VIN checks to run on every serious candidate', 'h2'))
     checks = [
         ['nhtsa.gov/recalls', 'Open, unrepaired recalls by VIN', 'Free', '1 min'],
         ['vpic.nhtsa.dot.gov', 'Manufacturer-submitted trim, engine, body class, plant',
@@ -1064,12 +1313,14 @@ def section_recalls(fw):
 
 # ---------------------------------------------------------- 8. colorado
 def section_colorado(fw):
-    s = [CondPageBreak(3.1 * inch), P('8.  Colorado-specific risk', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('9.  Regional risk: Colorado, California, Texas', 'h1'), rule()]
     s.append(P(
-        'A Wrangler that has lived its whole life in Jefferson County carries three regional '
-        'risks that a generic buyer\'s guide will not warn you about.', 'body'))
+        'Every market carries a signature hazard, and it is different in each. Colorado cars '
+        'corrode from de-icer and hide hail behind clean titles; Texas cars hide flood damage; '
+        'California cars are cooked by sun rather than eaten by salt. Match the inspection to '
+        'the car\'s history, not to a generic checklist.', 'body'))
 
-    s.append(P('8.1  Magnesium chloride', 'h2'))
+    s.append(P('9.1  Colorado: magnesium chloride', 'h2'))
     s.append(P(
         'Colorado\'s primary winter de-icer is liquid magnesium chloride rather than rock '
         'salt. It is more effective at low temperatures and it is considerably harder on '
@@ -1083,7 +1334,7 @@ def section_colorado(fw):
         'is around <b>$3 billion a year</b>.', 'body'))
     s.append(callout(
         'Why this compounds every other risk in this report',
-        'Section 5.1 identified TJ frame rot as a structural write-off. Mag chloride is exactly '
+        'Section 6.1 identified TJ frame rot as a structural write-off. Mag chloride is exactly '
         'the mechanism that produces it, and it attacks the same inside-out path - moisture '
         'retained in the lower frame rails where there are no drain holes. A Colorado-history '
         'TJ needs its frame inspected with more suspicion than an identical truck from a dry '
@@ -1091,7 +1342,7 @@ def section_colorado(fw):
         'sudden-failure item, not a slow-degradation item.',
         accent=RUST))
 
-    s.append(P('8.2  Hail, and the title that stays clean', 'h2'))
+    s.append(P('9.2  Colorado: hail, and the title that stays clean', 'h2'))
     s.append(P(
         'The Front Range sits in hail alley and Colorado routinely leads the nation in hail '
         'insurance claims. The specific trap: <b>a hail-damaged vehicle can be declared a '
@@ -1105,12 +1356,41 @@ def section_colorado(fw):
         'the largest, most exposed and most expensive-to-replace hail target on the vehicle, '
         'and a dimpled hardtop on an otherwise straight Jeep is a strong hail signal.', 'body'))
 
-    s.append(P('8.3  Title washing and odometer fraud', 'h2'))
+    s.append(P('9.3  Texas and California: the hazards that replace hail', 'h2'))
+    s.append(P(
+        'Section 3.4 sets out the scale of the Texas flood problem. What matters at inspection '
+        'time is that <b>flood damage and hail damage fail in exactly the same way</b>: an '
+        'uninsured or under-threshold loss produces no title brand at all, so the paperwork is '
+        'silent and only the car can tell you. Physical tells, in order of reliability:', 'body'))
+    s.append(bullets([
+        '<b>Smell before you look.</b> Damp, mildew, or an aggressive air freshener masking '
+        'something. Run the heater and the air conditioning at full fan and smell the vents.',
+        '<b>Silt and rust where water settles.</b> Under the carpet and padding, in the spare '
+        'wheel well, inside the seat rails and seat-belt retractors (pull the belt fully out '
+        'and look at the webbing near the spool), and along the underside of the dashboard.',
+        '<b>Corrosion in the wrong places.</b> Surface rust on unpainted interior fasteners, '
+        'seat frames, door hinges and the underside of the dash is not normal wear - it means '
+        'water sat inside the cabin.',
+        '<b>Electrical oddities.</b> Flood cars fail slowly and strangely. On a JK this is '
+        'genuinely hard to distinguish from the TIPM faults in Section 6.2, which is why the '
+        'title history matters so much on a Gulf Coast car.',
+        '<b>Fluids.</b> Milky or coffee-coloured engine oil, transmission fluid or differential '
+        'fluid indicates water ingress - see also the differential check in Section 11.1.',
+    ]))
+    s.append(P(
+        'California substitutes a slower, more visible hazard. Sun and heat degrade the soft '
+        'top and its plastic windows, craze the dashboard, chalk the clear coat and perish every '
+        'rubber seal on the vehicle. None of it is structural and none of it is hidden - but on '
+        'a Wrangler a replacement soft top or hardtop is a four-figure item, so price it in '
+        'rather than waving it through.', 'body'))
+
+    s.append(P('9.4  All markets: title washing and odometer fraud', 'h2'))
     s.append(P(
         'Title washing - moving a vehicle between states to shed a salvage or flood brand - '
         'and odometer rollback are both prohibited under the Colorado Consumer Protection Act, '
-        'and odometer tampering with intent to defraud is a federal offence. Prohibition is '
-        'not prevention. Two defences:', 'body'))
+        'and odometer tampering with intent to defraud is a federal offence. Buying across '
+        'state lines is exactly the situation title washing exists to exploit, so the defences '
+        'below matter more now than they did in a purely local search:', 'body'))
     s.append(bullets([
         '<b>Check NMVTIS, not just CARFAX.</b> The National Motor Vehicle Title Information '
         'System is the federal title database that states report into. It is materially harder '
@@ -1124,7 +1404,7 @@ def section_colorado(fw):
         'as a problem - but ask it out loud and get the answer in writing.',
     ]))
 
-    s.append(P('8.4  Altitude', 'h2'))
+    s.append(P('9.5  Altitude - wherever you buy it', 'h2'))
     s.append(P(
         'A naturally aspirated engine loses roughly three percent of its rated output per '
         '1,000 feet of elevation. Littleton sits around 5,400 feet. The 3.8L V6\'s 202 hp is '
@@ -1138,7 +1418,7 @@ def section_colorado(fw):
 
 # ---------------------------------------------------------- 9. seller
 def section_seller(fw):
-    s = [CondPageBreak(3.1 * inch), P('9.  Seller and dealer reliability assessment', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('10.  Seller and dealer reliability assessment', 'h1'), rule()]
     s.append(P(
         'You asked to prefer dealers with high reliability. That is the right instinct, and it '
         'needs one correction before the ratings below will be useful to you.', 'body'))
@@ -1153,7 +1433,7 @@ def section_seller(fw):
         'Read the complaint <i>narratives</i>; ignore the badge.',
         accent=AMBER, bg=colors.HexColor('#f7f1de')))
 
-    s.append(P('9.1  Named sellers in or near the search radius', 'h2'))
+    s.append(P('10.1  Named sellers in or near the search radius', 'h2'))
     s.append(P('All ratings graded <b>REPORTED</b> - recovered from search indexes; the review '
                'sites themselves were unreachable for direct confirmation.', 'small'))
     dealers = [
@@ -1170,7 +1450,7 @@ def section_seller(fw):
          '<b>4.2 / 5</b> across 260 CARFAX reviews; <b>4.3 / 5</b> across 840 DealerRater '
          'reviews.',
          'The second Jeep franchise store in your radius and the source of the 2016 lead in '
-         'Section 3.1 (stock GL246888). Largest new and used inventory in south Denver, so the '
+         'Section 4.1 (stock GL246888). Largest new and used inventory in south Denver, so the '
          'best odds of 2015-2017 stock. Complaint themes: the advertised "one price" not '
          'matching the price actually paid, and a certified-used inspection described as '
          'questionable (one buyer took delivery with mismatched tyres). <b>Confirm the '
@@ -1205,7 +1485,7 @@ def section_seller(fw):
         [1.15 * inch, 1.05 * inch, 1.05 * inch, fw - 3.25 * inch]))
     s.append(Spacer(1, 9))
 
-    s.append(P('9.2  Verifying a Colorado dealer before you visit', 'h2'))
+    s.append(P('10.2  Verifying a Colorado dealer before you visit', 'h2'))
     s.append(P(
         'Every retail motor vehicle dealer in Colorado must be licensed by the Colorado '
         'Department of Revenue, Auto Industry Division. Verification is free and public.',
@@ -1232,7 +1512,7 @@ def section_seller(fw):
         [1.55 * inch, 1.75 * inch, fw - 3.3 * inch]))
     s.append(Spacer(1, 9))
 
-    s.append(P('9.3  Seller scorecard', 'h2'))
+    s.append(P('10.3  Seller scorecard', 'h2'))
     s.append(P(
         'Score each seller out of 100 before you commit. Under 60, walk. This weighting is '
         'built for a $6,000-$18,000 purchase, where the seller\'s honesty matters more than '
@@ -1269,7 +1549,7 @@ def section_seller(fw):
         aligns=[('ALIGN', (1, 1), (1, -1), 'CENTER')]))
     s.append(Spacer(1, 8))
 
-    s.append(P('9.4  Private sellers', 'h2'))
+    s.append(P('10.4  Private sellers', 'h2'))
     s.append(P(
         'A private seller has no reconditioning budget, no warranty obligation and no '
         'reputation to protect, but also no margin to defend - so private-party cars are '
@@ -1290,7 +1570,7 @@ def section_seller(fw):
 
 # ---------------------------------------------------------- 10. PPI
 def section_ppi(fw):
-    s = [CondPageBreak(3.1 * inch), P('10.  Pre-purchase inspection protocol', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('11.  Pre-purchase inspection protocol', 'h1'), rule()]
     s.append(P(
         'On a vehicle this age, in this climate, with these known failure modes, an '
         'independent pre-purchase inspection is not optional. It is the highest-return '
@@ -1312,7 +1592,7 @@ def section_ppi(fw):
         'trucks and Jeeps and know to look at tyre wear, suspension play, driveline angles and '
         'the quality of aftermarket modifications.', 'body'))
 
-    s.append(P('10.1  Wrangler-specific inspection checklist', 'h2'))
+    s.append(P('11.1  Wrangler-specific inspection checklist', 'h2'))
     s.append(P('Hand this list to your inspector. The generic PPI will not cover most of it.',
                'small'))
 
@@ -1366,6 +1646,20 @@ def section_ppi(fw):
             'Aftermarket wiring quality - winches and light bars are where amateur wiring lives',
             'Water line staining inside the cab or in the footwells',
         ]],
+        ['FLOOD (any TX or Gulf Coast history)', [
+            'Smell test: damp or mildew, or heavy air freshener; run heater and A/C at full fan',
+            'Lift carpet and padding - silt, staining, or rust on the floor pan',
+            'Spare wheel well and under-seat rails for silt lines and corrosion',
+            'Seat-belt webbing pulled fully out - staining or grit near the spool',
+            'Surface rust on unpainted interior fasteners, seat frames, dash underside',
+            'Engine oil, transmission and differential fluid checked for milky water ingress',
+        ]],
+        ['SUN (any CA or desert history)', [
+            'Soft top fabric and plastic windows for hazing, splits and shrinkage',
+            'Hardtop and headliner condition - replacement is a four-figure item',
+            'Dashboard for cracking and crazing; paint and clear coat for chalking',
+            'All door, window and tailgate rubber seals for perishing and leaks',
+        ]],
         ['HAIL / BODY', [
             'Hardtop inspected in raking light for dimpling - largest hail target on the vehicle',
             'Roof, bonnet and wing tops in raking light',
@@ -1412,7 +1706,7 @@ def section_ppi(fw):
 
 # ---------------------------------------------------------- 11. negotiation
 def section_negotiation(fw):
-    s = [CondPageBreak(3.1 * inch), P('11.  Price anchoring and negotiation', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('12.  Price anchoring and negotiation', 'h1'), rule()]
     s.append(P(
         'Wranglers hold value unusually well, and sellers know it. Two structural facts give '
         'you leverage anyway.', 'body'))
@@ -1427,7 +1721,7 @@ def section_negotiation(fw):
         'joints, a hail-dimpled hardtop: each is a number, and each comes off the ask.',
     ]))
 
-    s.append(P('11.1  Anchors to bring with you', 'h2'))
+    s.append(P('12.1  Anchors to bring with you', 'h2'))
     anchors = [
         ['2011 Unlimited Sport', '$4,690 - $5,765', '$9,800 - $11,850',
          'Above $12,000 needs justifying: low miles, Rubicon or Sahara trim, or documented '
@@ -1461,14 +1755,17 @@ def section_negotiation(fw):
         'bad faith the way you should read it on a 2011.', 'body'))
     s.append(Spacer(1, 2))
 
-    s.append(P('11.2  Total cost of ownership, first year', 'h2'))
+    s.append(P('12.2  Total cost of ownership, first year', 'h2'))
     s.append(P('Budget realistically. A $13,000 Wrangler is not a $13,000 commitment.', 'small'))
     tco = [
         ['Purchase price', '$6,000 - $18,000', ''],
         ['Colorado sales tax, title, registration', 'Varies by jurisdiction',
          'Jefferson County rates apply; budget several hundred to over a thousand'],
         ['Independent PPI', '$125 - $269', 'Per vehicle inspected - budget for two, you will '
-         'walk away from at least one'],
+         'walk away from at least one. Out of state, arrange it near the seller.'],
+        ['Transport or collection', '$0 / $400-$700 / $700-$1,100',
+         'Local / fly-and-drive from CA or TX / open-carrier shipping. Add this to the asking '
+         'price before comparing an out-of-state car with a local one.'],
         ['Independent history report', '$25 - $45', 'Buy the one the dealer did not show you'],
         ['NMVTIS title check', '$5 - $15', 'Federal brand database'],
         ['Expected annual repair', '~$987', 'JK generation average - treat as a running cost, '
@@ -1496,44 +1793,49 @@ def section_negotiation(fw):
 
 # ---------------------------------------------------------- 12. plan
 def section_plan(fw):
-    s = [P('12.  Action plan', 'h1'), rule()]
+    s = [P('13.  Action plan', 'h1'), rule()]
     steps = [
         ['1', 'Re-run the searches yourself, unblocked',
-         'Cars.com, CarGurus, Autotrader and iSeeCars filtered to ZIP 80127, 20-mile radius, '
-         '$6,000-$18,000. These were unreachable from this environment; they will load fine in '
-         'your browser. Filter to 2014-2017 first - that is where the raised ceiling pays off. '
-         'Expect 60-90 genuine candidates across the full band.'],
+         'Cars.com, CarGurus, Autotrader and iSeeCars, three times over: ZIP 80127 at a '
+         '20-mile radius, then California statewide, then Texas. Filter each to 2015-2017 and '
+         '$6,000-$18,000. Colorado yields 60-90 candidates in band; California alone lists '
+         '4,955 of the 2015 model year. Start with California - Section 3.2 explains why.'],
         ['2', 'Decode every VIN before you contact anyone',
          'vpic.nhtsa.dot.gov for trim and engine, nhtsa.gov/recalls for open recalls. Free, '
          'ninety seconds each. Discard anything whose decoded year contradicts the advert.'],
-        ['3', 'Call AutoNation Chrysler Jeep Broadway first',
-         '5445 S Broadway, Littleton. Ask for stock GL246888 - the 2016 Wrangler from Section '
-         '3.1. Get the full VIN, price and mileage. This is the best-positioned lead in the '
-         'report and it only exists because of the raised ceiling.'],
+        ['3', 'Chase the two strongest leads first',
+         '1C4BJWDG6FL569653 - 2015 Unlimited Sport, 81,024 mi, La Crescenta CA, the lowest '
+         'mileage in-target car found. And stock GL246888, a 2016 at AutoNation Chrysler Jeep '
+         'Broadway, 5445 S Broadway, Littleton (Section 4.1) - the best local lead. Get full '
+         'VIN, price and mileage for both.'],
         ['4', 'Work the rest of the shortlist',
-         '1C4BJWEG6EL123953 (2014 Unlimited, Englewood), 1C4AJWAG1CL117007 (2012 two-door, low '
-         'miles, Englewood), 1J4AA2D1XAL173194 (2010 two-door, Lakewood). Confirm each is still '
-         'listed and get the real mileage and price.'],
+         '1C4AJWAG9GL189210 (2016 two-door, Upland CA), 1C4BJWEG6EL123953 (2014 Unlimited, '
+         'Englewood), 1C4AJWAG1CL117007 (2012 two-door, low miles, Englewood), '
+         '1J4AA2D1XAL173194 (2010 two-door, Lakewood). The two Texas cars need NMVTIS before '
+         'anything else.'],
         ['5', 'Filter hard by model year',
          'Target 2015-2017 with the 3.6L. Fall back to 2014, then to a documented 2010-2011 as '
          'a value play. Treat 2007, 2012 and 2013 as high risk - at this budget you no longer '
          'need to accept them. Any TJ is frame-first.'],
-        ['6', 'Pull factory campaign history by phone',
+        ['6', 'Convert every out-of-state price to a landed price',
+         'Add $700-$1,100 shipping, or $400-$700 to fly out and drive it back. Compare landed '
+         'against landed. Flying out is usually cheaper and always better diligence.'],
+        ['7', 'Pull factory campaign history by phone',
          'Any CDJR dealer service department, VIN in hand. Free. Decisive on any 2011-2013 '
          'Pentastar car.'],
-        ['7', 'Buy your own history report',
+        ['8', 'Buy your own history report',
          'CARFAX or AutoCheck - whichever the seller did not provide - plus an NMVTIS title '
          'check. Compare the title brand against the history and treat any disagreement as the '
          'answer.'],
-        ['8', 'Score the seller',
-         'Verify the Colorado dealer licence through the DOR lookup, then apply the Section 9.3 '
+        ['9', 'Score the seller',
+         'Verify the Colorado dealer licence through the DOR lookup, then apply the Section 10.3 '
          'scorecard. Under 60, walk.'],
-        ['9', 'Independent PPI with the Section 10.1 checklist',
+        ['10', 'Independent PPI with the Section 11.1 checklist',
          'Your shop, not theirs. Hand over the checklist. A refusal ends the conversation.'],
-        ['10', 'Negotiate from the inspection findings',
+        ['11', 'Negotiate from the inspection findings',
          'Anchor on the KBB bands in 11.1 and deduct every costed defect. Hold your walk-away '
          'number.'],
-        ['11', 'Before signing',
+        ['12', 'Before signing',
          'Physically match dash plate, door-jamb sticker, frame stamping and title. Get every '
          'verbal promise in writing - the recurring complaint against the largest dealer in '
          'your radius is post-sale paperwork and silence.'],
@@ -1548,19 +1850,24 @@ def section_plan(fw):
     s.append(callout(
         'The one-line summary',
         'A documented, inspected <b>2015-2017 JK with the 3.6L Pentastar</b> is the best use of '
-        '$6,000-$18,000 near 80127: the best-rated years of the generation, the good engine, '
-        'clear of the cylinder-head defect, and booking at $13,200-$15,800 private-party - '
-        'inside your ceiling with room for tax and inspection. Fall back to a 2014 if nothing '
-        'clean turns up, or to a well-documented 2010-2011 around $11,000-$12,000 if you would '
-        'rather bank the difference. The extra $3,000 over the original budget has bought you '
-        'out of the 2012-2013 compromise entirely - do not spend it going back there.',
+        '$6,000-$18,000: the best-rated years of the generation, the good engine, clear of the '
+        'cylinder-head defect, and booking at $13,200-$15,800 private-party - inside your '
+        'ceiling with room for tax and inspection. '
+        '<br/><br/>'
+        '<b>Search California first, Colorado second, Texas only for a specific car.</b> '
+        'California has five times the inventory and the lowest average price of any market '
+        'surveyed ($16,889 for a 2015); Colorado gives you a car you can inspect with your own '
+        'hands and no transport bill; Texas has the supply but the highest prices and the '
+        'flood-title risk. Convert every out-of-state price to a landed price before comparing '
+        'it with a local one - and if you do buy remotely, fly out and drive it home rather '
+        'than shipping it. It costs less and it doubles as a 1,000-mile inspection.',
         accent=GREEN, bg=colors.HexColor('#eaf1ea')))
     return s
 
 
 # ---------------------------------------------------------- 13. sources
 def section_sources(fw):
-    s = [CondPageBreak(3.1 * inch), P('13.  Sources', 'h1'), rule()]
+    s = [CondPageBreak(3.1 * inch), P('14.  Sources', 'h1'), rule()]
     s.append(P(
         'Recovered through server-side search indexing. The underlying pages could not be '
         'fetched directly from the compilation environment (Section 1.1), so these are cited '
@@ -1605,6 +1912,28 @@ def section_sources(fw):
           'sbg.colorado.gov - Colorado DOR Auto Industry Division, dealer licensing and lookup',
           'coag.gov - Colorado Attorney General, consumer complaints and protection',
           'vincheckpro.com / rockpointlaw.com - Colorado used-car buyer protections']),
+        ('Multi-state markets and logistics',
+         ['cargurus.com / edmunds.com / truecar.com - 2015 and 2016 Wrangler average list price '
+          'and supply: California statewide, Los Angeles, Sacramento',
+          'cargurus.com / edmunds.com / autotrader.com / autonationusa.com - Wrangler supply and '
+          'average list price, Houston and Dallas',
+          'roadrunnerautotransport.com / sgtautotransport.com / amerifreight.net / '
+          'sakaemlogistics.com - 2026 car shipping costs, California and Texas to Colorado',
+          'dmv.colorado.gov - VIN inspections and form DR 2698',
+          'larimer.gov - titling a vehicle from out of state',
+          'dmv.org - Colorado registration and emissions programme areas',
+          'dmv.ca.gov (FFVR 29) / etags.com - out-of-state vehicle purchase and registration; '
+          'Secure Power of Attorney for remote odometer disclosure',
+          'jeepforum.com / wranglerforum.com - regional corrosion comparison, magnesium '
+          'chloride versus rock salt']),
+        ('Texas flood risk',
+         ['texasattorneygeneral.gov - consumer alerts on flood-damaged vehicles and disclosure '
+          'obligations under the Deceptive Trade Practices Act',
+          'txdmv.gov - water-damaged vehicles and title check',
+          'nicb.org - over 637,000 vehicles damaged in Hurricanes Harvey and Irma',
+          'consumerreports.org - flooded cars returning to the road; title washing',
+          'nhtsa.gov - hurricane and flood-damaged vehicles',
+          'vehiclehistory.bja.ojp.gov - NMVTIS for consumers']),
         ('Inspection',
          ['repairpal.com - Jeep Wrangler pre-purchase inspection cost estimate',
           'advancedcarinspections.com - Denver PPI pricing, 2026',
@@ -1632,7 +1961,7 @@ def section_sources(fw):
         'history report, a title search, a mechanical inspection, or professional advice. '
         'Every price, mileage and inventory figure is time-sensitive and graded REPORTED - '
         'confirm each one directly with the seller before acting. The VIN authentication in '
-        'Section 3 is reproducible offline and is the only class of claim here that carries '
+        'Section 4 is reproducible offline and is the only class of claim here that carries '
         'independent proof.', 'small'))
     return s
 
