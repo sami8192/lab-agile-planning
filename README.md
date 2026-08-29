@@ -201,5 +201,5 @@ handles SIGINT/SIGTERM cleanly and survives individual source failures.
 ### Tests
 
 ```bash
-python -m pytest        # 144 tests, no network access required
+python -m pytest        # 142 tests, no network access required
 ```
