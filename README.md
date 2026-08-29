@@ -12,8 +12,10 @@ moment a price drops.
 
 * **New only** — refurbished, renewed, open-box and used listings are filtered out.
 * **Large screen only** — a listing qualifies when the model's display is at least
-  6.5″ (configurable). Today that means iPhone Air, every *Plus*, and every *Pro Max*;
-  run `iphone-watch models` to see the full table.
+  6.5″ (configurable). Today that means **iPhone Air** (6.5″), every ***Plus*** (6.7″,
+  e.g. iPhone 16 Plus) and every ***Pro Max*** (6.7–6.9″); run `iphone-watch models` to
+  see the full table. The Air sits exactly on the threshold, so raising
+  `min_screen_inches` above 6.5 drops it.
 * **256 GB minimum** — configurable, `1TB`/`2TB` titles are understood.
 * **Unlocked, or T-Mobile** — anything locked to another carrier (AT&T, Verizon,
   Cricket, Metro, Xfinity…) is skipped. T-Mobile listings are kept, because they can be
@@ -199,5 +201,5 @@ handles SIGINT/SIGTERM cleanly and survives individual source failures.
 ### Tests
 
 ```bash
-python -m pytest        # 133 tests, no network access required
+python -m pytest        # 144 tests, no network access required
 ```

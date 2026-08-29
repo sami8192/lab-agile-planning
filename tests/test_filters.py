@@ -1,3 +1,5 @@
+import pytest
+
 from iphone_watch.config import Criteria
 from iphone_watch.filters import evaluate, split
 from iphone_watch.models import Listing
@@ -102,3 +104,33 @@ def test_carrier_checks_can_be_turned_off_or_widened():
     assert evaluate(make("Apple iPhone 17 Pro Max 256GB - AT&T - New"), widened) is None
     lenient = Criteria(exclude_new_line_offers=False)
     assert evaluate(make("Apple iPhone 17 Pro Max 256GB New - $500 off with new line"), lenient) is None
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "Apple iPhone Air 256GB Sky Blue - Unlocked - New",
+        "Apple iPhone Air 256GB Sky Blue - T-Mobile - New",
+        "Apple iPhone Air 512GB - Unlocked - New",
+        "Apple iPhone 16 Plus 256GB Teal (Unlocked) - New",
+        "Apple iPhone 16 Plus 256GB Teal - T-Mobile - New",
+        "Apple iPhone 17 Pro Max 256GB (Unlocked) - New",
+        "Apple iPhone 16 Pro Max 256GB - Unlocked - New",
+    ],
+)
+def test_the_whole_accepted_lineup_is_watched(title):
+    # The iPhone Air sits exactly on the 6.5" threshold, so the comparison has
+    # to stay inclusive; this pins every family the defaults should catch.
+    assert evaluate(make(title), DEFAULTS) is None
+
+
+def test_iphone_air_needs_256gb_like_everything_else():
+    assert "128GB below" in evaluate(make("Apple iPhone Air 128GB - Unlocked - New"), DEFAULTS)
+
+
+def test_raising_the_screen_threshold_would_drop_the_air():
+    # Documented consequence of min_screen_inches > 6.5, guarded so it is a
+    # deliberate choice rather than a surprise.
+    strict = Criteria(min_screen_inches=6.7)
+    assert "screen below" in evaluate(make("Apple iPhone Air 256GB - Unlocked - New"), strict)
+    assert evaluate(make("Apple iPhone 16 Plus 256GB - Unlocked - New"), strict) is None
