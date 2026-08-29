@@ -1,0 +1,101 @@
+{
+  "criteria": {
+    "min_screen_inches": 6.5,
+    "min_storage_gb": 256,
+    "conditions": ["new"],
+    "models": [],
+    "exclude_models": [],
+    "max_price": null,
+    "currency": "USD",
+    "require_in_stock": true,
+    "allow_unknown_models": false
+  },
+  "alerts": {
+    "min_drop_percent": 2.0,
+    "min_drop_amount": 10.0,
+    "baseline": "best",
+    "notify_cooldown_hours": 12,
+    "notify_on_first_seen": false,
+    "group_notifications": true,
+    "max_items_per_notification": 5
+  },
+  "sources": [
+    {
+      "type": "sample",
+      "name": "demo",
+      "enabled": true
+    },
+    {
+      "type": "bestbuy",
+      "name": "bestbuy",
+      "enabled": false,
+      "api_key": "${BESTBUY_API_KEY}",
+      "search": "iphone"
+    },
+    {
+      "type": "ebay",
+      "name": "ebay",
+      "enabled": false,
+      "client_id": "${EBAY_CLIENT_ID}",
+      "client_secret": "${EBAY_CLIENT_SECRET}",
+      "query": "Apple iPhone 17 Pro Max 256GB",
+      "marketplace": "EBAY_US"
+    },
+    {
+      "type": "custom_html",
+      "name": "apple-store",
+      "enabled": false,
+      "url": "https://www.apple.com/shop/buy-iphone/iphone-17-pro",
+      "title": "Apple iPhone 17 Pro Max 256GB",
+      "condition": "new",
+      "storage_gb": 256
+    },
+    {
+      "type": "custom_json",
+      "name": "my-retailer-api",
+      "enabled": false,
+      "url": "https://api.example.com/v1/search",
+      "params": { "q": "iphone", "condition": "new" },
+      "headers": { "Authorization": "Bearer ${RETAILER_TOKEN}" },
+      "items_path": "data.products",
+      "fields": {
+        "id": "sku",
+        "title": "name",
+        "price": "price.amount",
+        "currency": "price.currency",
+        "url": "links.web",
+        "condition": "condition",
+        "in_stock": "availability.online"
+      }
+    }
+  ],
+  "notifiers": [
+    {
+      "type": "ntfy",
+      "name": "phone",
+      "enabled": true,
+      "topic": "${NTFY_TOPIC:-iphone-price-watch-demo}",
+      "server": "https://ntfy.sh"
+    },
+    {
+      "type": "pushover",
+      "name": "pushover",
+      "enabled": false,
+      "token": "${PUSHOVER_TOKEN}",
+      "user": "${PUSHOVER_USER}"
+    },
+    {
+      "type": "webhook",
+      "name": "webhook",
+      "enabled": false,
+      "url": "${ALERT_WEBHOOK_URL}"
+    },
+    {
+      "type": "console",
+      "name": "stdout",
+      "enabled": true
+    }
+  ],
+  "state_file": "state/prices.json",
+  "interval_seconds": 900
+}

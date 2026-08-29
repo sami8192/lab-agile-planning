@@ -1,0 +1,68 @@
+{
+  "listings": [
+    {
+      "id": "demo-17-pro-max-256",
+      "title": "Apple iPhone 17 Pro Max 256GB Deep Blue (Unlocked) - New",
+      "price": 1199.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-17-pro-max-256",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-17-pro-max-512",
+      "title": "Apple iPhone 17 Pro Max 512GB Silver (Unlocked) - New",
+      "price": 1399.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-17-pro-max-512",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-air-256",
+      "title": "Apple iPhone Air 256GB Sky Blue - Brand New Sealed",
+      "price": 999.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-air-256",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-16-plus-256",
+      "title": "Apple iPhone 16 Plus 256GB Teal - New",
+      "price": 899.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-16-plus-256",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-16-pro-max-128-refurb",
+      "title": "Apple iPhone 16 Pro Max 128GB - Certified Refurbished",
+      "price": 749.0,
+      "currency": "USD",
+      "condition": "Refurbished",
+      "url": "https://example.com/iphone-16-pro-max-refurb",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-17-256",
+      "title": "Apple iPhone 17 256GB Black - New",
+      "price": 899.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-17-256",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-17-pro-max-256-oos",
+      "title": "Apple iPhone 17 Pro Max 256GB Cosmic Orange - New",
+      "price": 1149.0,
+      "currency": "USD",
+      "condition": "New",
+      "in_stock": false,
+      "url": "https://example.com/iphone-17-pro-max-orange",
+      "seller": "Demo Store"
+    }
+  ]
+}
