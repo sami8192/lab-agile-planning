@@ -267,3 +267,20 @@ def test_ebay_source_adds_shipping_and_uses_a_token(monkeypatch):
 def test_ebay_source_requires_credentials():
     with pytest.raises(SourceError):
         list(build_source({"type": "ebay", "name": "ebay"}).fetch())
+
+
+def test_ebay_source_uses_best_match_relevance_unless_told_otherwise(monkeypatch):
+    from iphone_watch.sources import ebay as ebay_module
+
+    monkeypatch.setattr(
+        ebay_module, "request", lambda url, **kwargs: json.dumps({"access_token": "tok", "expires_in": 7200})
+    )
+    seen = {}
+    monkeypatch.setattr(ebay_module, "get_json", lambda url, **kwargs: seen.update(kwargs) or {})
+
+    base = {"type": "ebay", "name": "e", "client_id": "id", "client_secret": "s"}
+    list(build_source(base).fetch())
+    # A cheapest-first sort would fill a broad query with cases and chargers.
+    assert seen["params"]["sort"] is None
+    list(build_source({**base, "sort": "price"}).fetch())
+    assert seen["params"]["sort"] == "price"

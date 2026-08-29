@@ -24,6 +24,10 @@ class EbaySource(Source):
         ``query``        search term, default ``Apple iPhone``
         ``marketplace``  e.g. ``EBAY_US`` (default), ``EBAY_GB``
         ``limit``        results per page (max 200)
+        ``sort``         eBay sort order; unset means best-match relevance, which
+                         is what a targeted query wants — ``price`` returns the
+                         cheapest items first, so a broad query fills up with
+                         accessories before it reaches a phone
         ``max_price``    server-side price ceiling
     """
 
@@ -75,7 +79,7 @@ class EbaySource(Source):
                     "category_ids": self.settings.get("category_id", CELL_PHONES_CATEGORY),
                     "filter": ",".join(filters),
                     "limit": int(self.settings.get("limit", 100)),
-                    "sort": "price",
+                    "sort": self.settings.get("sort"),
                 },
                 headers={
                     "Authorization": f"Bearer {self._access_token()}",

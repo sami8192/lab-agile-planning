@@ -17,6 +17,10 @@ moment a price drops.
   see the full table. The Air sits exactly on the threshold, so raising
   `min_screen_inches` above 6.5 drops it.
 * **256 GB minimum** — configurable, `1TB`/`2TB` titles are understood.
+* **Three models** — the committed `config.json` narrows the watch to
+  `["Air", "16 Plus", "Pro Max"]`: iPhone Air, iPhone 16 Plus and any *Pro Max*
+  generation. Empty the `models` list to watch every phone that clears the screen and
+  storage rules, or change `"Pro Max"` to `"17 Pro Max"` to pin the current one.
 * **Unlocked, or T-Mobile** — anything locked to another carrier (AT&T, Verizon,
   Cricket, Metro, Xfinity…) is skipped. T-Mobile listings are kept, because they can be
   activated on an existing T-Mobile line. Listings that don't state a lock status are
@@ -36,18 +40,22 @@ git clone https://github.com/sami8192/lab-agile-planning.git
 cd lab-agile-planning
 
 # 1. try it offline against the bundled demo listings
-python -m iphone_watch check --dry-run --explain
+python -m iphone_watch -c config.example.json check --dry-run --explain
 
-# 2. make your own config
-cp config.example.json config.json
-
-# 3. get pushes on your phone (see "Push notifications" below)
+# 2. get pushes on your phone (see "Push notifications" below)
 export NTFY_TOPIC="iphone-drops-$(openssl rand -hex 6)"
 python -m iphone_watch test-notify
 
-# 4. watch continuously
-python -m iphone_watch watch --interval 900
+# 3. add credentials for the live sources, then watch
+export EBAY_CLIENT_ID=… EBAY_CLIENT_SECRET=… BESTBUY_API_KEY=…
+python -m iphone_watch check --explain      # one pass, shows what was skipped
+python -m iphone_watch watch --interval 900 # keep going
 ```
+
+`config.json` is the live configuration (already narrowed to the three models);
+`config.example.json` documents every option and keeps the offline demo source.
+Credentials are never stored in either file — they are read from the environment
+through `${VAR}` placeholders.
 
 Python 3.9+ and no third-party packages. `pip install -e .` also installs an
 `iphone-watch` command that is equivalent to `python -m iphone_watch`.
@@ -171,9 +179,18 @@ Exit codes: `0` success, `1` a source or notifier failed, `2` bad configuration.
 ### Running it unattended
 
 **GitHub Actions** — `.github/workflows/iphone-price-watch.yml` runs a check every 30
-minutes, keeps the price history in the Actions cache between runs, and reads your
-credentials from repository secrets (`NTFY_TOPIC`, `BESTBUY_API_KEY`, …). Add the
-secrets, commit a `config.json`, and it works with no server of your own.
+minutes against `config.json`, keeps the price history in the Actions cache between
+runs, and reads credentials from repository secrets. Add these under
+*Settings → Secrets and variables → Actions* and it works with no server of your own:
+
+| Secret | Needed for |
+| --- | --- |
+| `NTFY_TOPIC` | the push itself — required |
+| `EBAY_CLIENT_ID`, `EBAY_CLIENT_SECRET` | the three eBay sources |
+| `BESTBUY_API_KEY` | the Best Buy source |
+
+Until a source's secret exists that source reports a clear error and the run exits `1`;
+the other sources still run. Disable the ones you don't want in `config.json`.
 
 **cron** — one pass per invocation:
 
@@ -201,5 +218,5 @@ handles SIGINT/SIGTERM cleanly and survives individual source failures.
 ### Tests
 
 ```bash
-python -m pytest        # 142 tests, no network access required
+python -m pytest        # 159 tests, no network access required
 ```
