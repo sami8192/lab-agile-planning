@@ -1,0 +1,56 @@
+name: iPhone price watch
+
+on:
+  schedule:
+    # Every 30 minutes. GitHub queues cron jobs, so runs can be a few minutes late.
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Detect drops without sending a push"
+        type: boolean
+        default: false
+
+concurrency:
+  group: iphone-price-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The price history lives in the cache: a new run restores the most recent
+      # snapshot, so a drop is measured against what the previous run saw.
+      - name: Restore price history
+        uses: actions/cache/restore@v4
+        with:
+          path: state
+          key: iphone-price-state-${{ github.run_id }}
+          restore-keys: |
+            iphone-price-state-
+
+      - name: Check for price drops
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          PUSHOVER_TOKEN: ${{ secrets.PUSHOVER_TOKEN }}
+          PUSHOVER_USER: ${{ secrets.PUSHOVER_USER }}
+          BESTBUY_API_KEY: ${{ secrets.BESTBUY_API_KEY }}
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+        run: |
+          python -m iphone_watch check -v ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Save price history
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state
+          key: iphone-price-state-${{ github.run_id }}

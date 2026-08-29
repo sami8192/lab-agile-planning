@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iphone-price-watch"
+version = "1.0.0"
+description = "Watch new large-screen iPhones (256GB+) for price drops and push an alert to your phone."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+iphone-watch = "iphone_watch.cli:main"
+
+[tool.setuptools]
+packages = ["iphone_watch", "iphone_watch.sources", "iphone_watch.notifiers"]
+
+[tool.setuptools.package-data]
+iphone_watch = ["fixtures/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
