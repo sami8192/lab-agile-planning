@@ -68,3 +68,37 @@ def test_split_partitions_listings():
     )
     assert [listing.listing_id for listing in kept] == ["a"]
     assert [rejection.listing.listing_id for rejection in rejected] == ["b"]
+
+
+def test_accepts_unlocked_and_tmobile_listings():
+    assert evaluate(make("Apple iPhone 17 Pro Max 256GB (Unlocked) - New"), DEFAULTS) is None
+    # An existing T-Mobile line means a T-Mobile listing is still usable.
+    assert evaluate(make("Apple iPhone 17 Pro Max 256GB - T-Mobile - New"), DEFAULTS) is None
+
+
+def test_rejects_other_carriers():
+    assert "locked to AT&T" in evaluate(make("Apple iPhone 17 Pro Max 256GB - AT&T - New"), DEFAULTS)
+    assert "locked to Verizon" in evaluate(make("Apple iPhone 17 Pro Max 256GB Verizon New"), DEFAULTS)
+    # Metro is a T-Mobile brand but its phones are still carrier locked.
+    assert "Metro" in evaluate(make("Metro by T-Mobile Apple iPhone 16 Plus 256GB New"), DEFAULTS)
+
+
+def test_rejects_prices_that_need_a_new_line_or_trade_in():
+    reason = evaluate(make("Apple iPhone 17 Pro Max 256GB New - $500 off with new line activation"), DEFAULTS)
+    assert "new line" in reason
+    assert "trade-in" in evaluate(make("Apple iPhone 17 Pro Max 256GB New with trade-in"), DEFAULTS)
+
+
+def test_silent_listings_are_watched_by_default_but_can_be_required_to_state_it():
+    quiet = make("Apple iPhone 17 Pro Max 256GB Deep Blue - New")
+    assert evaluate(quiet, DEFAULTS) is None
+    strict = Criteria(allow_unknown_carrier=False)
+    assert "not stated" in evaluate(quiet, strict)
+
+
+def test_carrier_checks_can_be_turned_off_or_widened():
+    assert evaluate(make("Apple iPhone 17 Pro Max 256GB - AT&T - New"), Criteria(require_unlocked=False)) is None
+    widened = Criteria(allowed_carriers=("unlocked", "t-mobile", "at&t"))
+    assert evaluate(make("Apple iPhone 17 Pro Max 256GB - AT&T - New"), widened) is None
+    lenient = Criteria(exclude_new_line_offers=False)
+    assert evaluate(make("Apple iPhone 17 Pro Max 256GB New - $500 off with new line"), lenient) is None

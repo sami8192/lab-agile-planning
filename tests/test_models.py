@@ -86,3 +86,65 @@ def test_enriched_fills_model_storage_and_screen():
 def test_label_renders_terabytes():
     listing = Listing(source="s", listing_id="2", title="iPhone 17 Pro Max 1TB", price=1599.0).enriched()
     assert listing.label == "iPhone 17 Pro Max 1TB"
+
+
+@pytest.mark.parametrize(
+    "title,expected",
+    [
+        ("Apple iPhone 17 Pro Max 256GB (Unlocked)", "unlocked"),
+        ("Apple iPhone 17 Pro Max 256GB SIM-Free", "unlocked"),
+        ("Apple iPhone 17 Pro Max 256GB - T-Mobile", "t-mobile"),
+        ("Apple iPhone 17 Pro Max 256GB - AT&T", "at&t"),
+        ("Apple iPhone 16 Plus 256GB Verizon", "verizon"),
+        ("Metro by T-Mobile iPhone 16 Plus 256GB", "metro"),
+        ("iPhone 16 Plus 256GB locked to Verizon", "verizon"),
+        ("Unlocked — works with T-Mobile and AT&T", "unlocked"),
+        ("Apple iPhone 17 Pro Max 256GB Deep Blue", None),
+    ],
+)
+def test_normalize_carrier(title, expected):
+    from iphone_watch.models import normalize_carrier
+
+    assert normalize_carrier(title) == expected
+
+
+@pytest.mark.parametrize(
+    "title,expected",
+    [
+        ("iPhone 17 Pro Max 256GB - $500 off with new line activation", True),
+        ("Save $400 when you port-in your number", True),
+        ("iPhone 17 Pro Max 256GB with trade-in", True),
+        ("Apple iPhone 17 Pro Max 256GB (Unlocked)", False),
+    ],
+)
+def test_requires_new_line(title, expected):
+    from iphone_watch.models import requires_new_line
+
+    assert requires_new_line(title) is expected
+
+
+def test_enriched_reads_carrier_and_activation_terms():
+    listing = Listing(
+        source="s",
+        listing_id="1",
+        title="Apple iPhone 17 Pro Max 256GB (Unlocked) - New",
+        price=1199.0,
+    ).enriched()
+    assert listing.carrier == "unlocked"
+    assert listing.needs_new_line is False
+    assert listing.label == "iPhone 17 Pro Max 256GB (Unlocked)"
+
+
+def test_explicit_carrier_field_is_normalised():
+    listing = Listing(
+        source="s", listing_id="1", title="Apple iPhone 16 Plus 256GB", price=899.0, carrier="T-Mobile"
+    ).enriched()
+    assert listing.carrier == "t-mobile"
+    assert listing.label.endswith("(T-Mobile)")
+
+
+def test_carrier_label_falls_back_to_a_readable_string():
+    from iphone_watch.models import carrier_label
+
+    assert carrier_label(None) == "carrier not stated"
+    assert carrier_label("at&t") == "AT&T"

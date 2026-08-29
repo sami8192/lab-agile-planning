@@ -49,6 +49,8 @@ class SampleSource(Source):
                     model=item.get("model"),
                     storage_gb=item.get("storage_gb"),
                     seller=item.get("seller"),
+                    carrier=item.get("carrier"),
+                    needs_new_line=bool(item.get("needs_new_line", False)),
                     in_stock=bool(item.get("in_stock", True)),
                 )
             )

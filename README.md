@@ -6,15 +6,23 @@ Repository lab for agile planning.
 
 ## iPhone price watch
 
-A dependency-free Python watcher that tracks **brand-new, large-screen iPhones with at
-least 256 GB of storage** and sends a **push notification to your phone** the moment a
-price drops.
+A dependency-free Python watcher that tracks **brand-new, unlocked, large-screen iPhones
+with at least 256 GB of storage** and sends a **push notification to your phone** the
+moment a price drops.
 
 * **New only** — refurbished, renewed, open-box and used listings are filtered out.
 * **Large screen only** — a listing qualifies when the model's display is at least
   6.5″ (configurable). Today that means iPhone Air, every *Plus*, and every *Pro Max*;
   run `iphone-watch models` to see the full table.
 * **256 GB minimum** — configurable, `1TB`/`2TB` titles are understood.
+* **Unlocked, or T-Mobile** — anything locked to another carrier (AT&T, Verizon,
+  Cricket, Metro, Xfinity…) is skipped. T-Mobile listings are kept, because they can be
+  activated on an existing T-Mobile line. Listings that don't state a lock status are
+  watched by default; set `allow_unknown_carrier: false` to require an explicit
+  "unlocked".
+* **No new-line pricing** — offers whose price only applies with a new line, a port-in,
+  a new account or a trade-in are skipped, so the alert is the price you would actually
+  pay activating on the line you already have.
 * **Real drops only** — the price is compared against the history stored on disk, with
   a minimum drop in both percent and currency, plus a cooldown so one sale doesn't
   spam you.
@@ -59,7 +67,7 @@ Alerts are grouped: several drops in one pass become a single push such as
 
 ```
 3 iPhone price drops (best -12%)
-• iPhone 17 Pro Max 256GB: $1,199 → $1,049 (-12.5%)
+• iPhone 17 Pro Max 256GB (Unlocked): $1,199 → $1,049 (-12.5%)
   at Demo Store
   https://example.com/…
 ```
@@ -98,9 +106,12 @@ Prefer an official API where one exists, and check a retailer's Terms of Service
 }
 ```
 
-Model, storage size, screen size and condition are parsed out of the listing title when
-the source doesn't provide them, so a plain title like
-`Apple iPhone 17 Pro Max 256GB Deep Blue (Unlocked) - New` is enough.
+Model, storage size, screen size, condition, carrier and new-line terms are parsed out
+of the listing title when the source doesn't provide them, so a plain title like
+`Apple iPhone 17 Pro Max 256GB Deep Blue (Unlocked) - New` is enough. Sources that do
+expose the data (Best Buy's `carrier` attribute, or a `carrier` / `needs_new_line` field
+you map in `custom_json`) are trusted over the title, and `custom_html` takes
+`"carrier": "unlocked"` from its config for pages that don't say.
 
 ### Configuration
 
@@ -114,6 +125,10 @@ populated example.
 | `min_screen_inches` | `6.5` | Minimum display size; the model→screen table is built in. |
 | `min_storage_gb` | `256` | Minimum storage. |
 | `conditions` | `["new"]` | Allowed conditions (`new`, `refurbished`, `used`). |
+| `require_unlocked` | `true` | Skip phones locked to a carrier outside `allowed_carriers`. |
+| `allowed_carriers` | `["unlocked", "t-mobile"]` | Carriers that still work for you. Sub-brands (`metro`, `cricket`, `visible`…) are treated as their own carriers, since their phones stay locked. |
+| `allow_unknown_carrier` | `true` | Keep listings that never state a lock status (most retail listings). Set to `false` to require the word "unlocked". |
+| `exclude_new_line_offers` | `true` | Skip prices conditional on a new line, port-in or trade-in. |
 | `models` / `exclude_models` | `[]` | Optional allow/deny substrings, e.g. `["Pro Max"]`. |
 | `max_price` | `null` | Ignore anything above this price. |
 | `currency` | `"USD"` | Listings in another currency are skipped. |
@@ -170,7 +185,8 @@ handles SIGINT/SIGTERM cleanly and survives individual source failures.
 ### How a drop is decided
 
 1. Every source is fetched; a failing source is logged and the pass continues.
-2. Listings are enriched (model, storage, screen, condition) and filtered by `criteria`.
+2. Listings are enriched (model, storage, screen, condition, carrier, activation terms)
+   and filtered by `criteria`.
 3. Each surviving listing is compared with its own history under `state_file`, keyed by
    `source:listing_id`. A first sighting is recorded, never alerted (unless
    `notify_on_first_seen`).
@@ -183,5 +199,5 @@ handles SIGINT/SIGTERM cleanly and survives individual source failures.
 ### Tests
 
 ```bash
-python -m pytest        # 110 tests, no network access required
+python -m pytest        # 133 tests, no network access required
 ```

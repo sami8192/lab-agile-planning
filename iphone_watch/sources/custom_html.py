@@ -61,6 +61,7 @@ class CustomHtmlSource(Source):
         ``title``         override the product title (recommended: it drives the
                           model / storage / screen-size checks)
         ``price_regex``   regex whose first group is the price
+        ``carrier``       ``unlocked``/``t-mobile``/… when the page does not say
         ``currency``      currency code when the page does not state one
         ``headers``       extra request headers
     """
@@ -122,6 +123,7 @@ class CustomHtmlSource(Source):
                 storage_gb=self.settings.get("storage_gb"),
                 model=self.settings.get("model"),
                 seller=self.settings.get("seller"),
+                carrier=self.settings.get("carrier"),
                 in_stock=bool(in_stock),
             )
         ]

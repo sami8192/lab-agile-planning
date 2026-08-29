@@ -7,7 +7,8 @@
       "currency": "USD",
       "condition": "New",
       "url": "https://example.com/iphone-17-pro-max-256",
-      "seller": "Demo Store"
+      "seller": "Demo Store",
+      "carrier": "unlocked"
     },
     {
       "id": "demo-17-pro-max-512",
@@ -16,7 +17,8 @@
       "currency": "USD",
       "condition": "New",
       "url": "https://example.com/iphone-17-pro-max-512",
-      "seller": "Demo Store"
+      "seller": "Demo Store",
+      "carrier": "unlocked"
     },
     {
       "id": "demo-air-256",
@@ -25,7 +27,8 @@
       "currency": "USD",
       "condition": "New",
       "url": "https://example.com/iphone-air-256",
-      "seller": "Demo Store"
+      "seller": "Demo Store",
+      "carrier": "unlocked"
     },
     {
       "id": "demo-16-plus-256",
@@ -34,7 +37,8 @@
       "currency": "USD",
       "condition": "New",
       "url": "https://example.com/iphone-16-plus-256",
-      "seller": "Demo Store"
+      "seller": "Demo Store",
+      "carrier": "unlocked"
     },
     {
       "id": "demo-16-pro-max-128-refurb",
@@ -62,6 +66,33 @@
       "condition": "New",
       "in_stock": false,
       "url": "https://example.com/iphone-17-pro-max-orange",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-17-pro-max-256-att",
+      "title": "Apple iPhone 17 Pro Max 256GB Deep Blue - AT&T",
+      "price": 1049.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-17-pro-max-att",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-17-pro-max-256-newline",
+      "title": "Apple iPhone 17 Pro Max 256GB - New, $500 off with new line activation",
+      "price": 699.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-17-pro-max-newline",
+      "seller": "Demo Store"
+    },
+    {
+      "id": "demo-16-plus-256-tmobile",
+      "title": "Apple iPhone 16 Plus 256GB Teal - T-Mobile - New",
+      "price": 859.0,
+      "currency": "USD",
+      "condition": "New",
+      "url": "https://example.com/iphone-16-plus-tmobile",
       "seller": "Demo Store"
     }
   ]

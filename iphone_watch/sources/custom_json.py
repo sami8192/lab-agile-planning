@@ -17,6 +17,8 @@ DEFAULT_FIELDS = {
     "condition": "condition",
     "storage_gb": "storage_gb",
     "seller": "seller",
+    "carrier": "carrier",
+    "needs_new_line": "needs_new_line",
     "in_stock": "in_stock",
 }
 
@@ -77,6 +79,8 @@ class CustomJsonSource(Source):
                     condition=str(dig(item, fields["condition"], default=static.get("condition", "")) or ""),
                     storage_gb=dig(item, fields["storage_gb"]),
                     seller=dig(item, fields["seller"], default=static.get("seller")),
+                    carrier=dig(item, fields["carrier"], default=static.get("carrier")),
+                    needs_new_line=bool(dig(item, fields["needs_new_line"], default=False)),
                     in_stock=bool(in_stock),
                 )
             )

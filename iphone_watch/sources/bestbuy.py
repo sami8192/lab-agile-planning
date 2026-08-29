@@ -9,7 +9,7 @@ from ..models import Listing, parse_price
 from .base import Source, SourceError
 
 ENDPOINT = "https://api.bestbuy.com/v1/products"
-FIELDS = "sku,name,salePrice,regularPrice,onSale,url,onlineAvailability,manufacturer"
+FIELDS = "sku,name,salePrice,regularPrice,onSale,url,onlineAvailability,manufacturer,carrier"
 
 
 class BestBuySource(Source):
@@ -58,6 +58,7 @@ class BestBuySource(Source):
                     url=str(product.get("url", "")),
                     condition="new",
                     seller="Best Buy",
+                    carrier=product.get("carrier"),
                     in_stock=bool(product.get("onlineAvailability", True)),
                     extra={"regular_price": parse_price(product.get("regularPrice"))},
                 )

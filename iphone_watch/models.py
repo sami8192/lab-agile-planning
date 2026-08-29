@@ -138,6 +138,104 @@ def normalize_condition(text: Optional[str]) -> str:
     return "unknown"
 
 
+CARRIER_LABELS = {
+    "unlocked": "Unlocked",
+    "t-mobile": "T-Mobile",
+    "at&t": "AT&T",
+    "verizon": "Verizon",
+    "sprint": "Sprint",
+    "metro": "Metro by T-Mobile",
+    "boost": "Boost Mobile",
+    "cricket": "Cricket",
+    "straight-talk": "Straight Talk",
+    "tracfone": "TracFone",
+    "total-wireless": "Total Wireless",
+    "xfinity": "Xfinity Mobile",
+    "visible": "Visible",
+    "mint": "Mint Mobile",
+    "us-cellular": "UScellular",
+    "consumer-cellular": "Consumer Cellular",
+}
+
+# Checked in order: the first match wins, so sub-brands ("Metro by T-Mobile")
+# must come before the parent network they mention.
+_CARRIER_MARKERS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("metro", ("metro by t-mobile", "metropcs", "metro pcs")),
+    ("total-wireless", ("total wireless", "total by verizon")),
+    ("straight-talk", ("straight talk", "straighttalk")),
+    ("xfinity", ("xfinity",)),
+    ("visible", ("visible by verizon",)),
+    ("tracfone", ("tracfone",)),
+    ("mint", ("mint mobile",)),
+    ("consumer-cellular", ("consumer cellular",)),
+    ("us-cellular", ("us cellular", "uscellular", "u.s. cellular")),
+    ("boost", ("boost mobile", "boost infinite")),
+    ("cricket", ("cricket wireless", "cricket")),
+    ("t-mobile", ("t-mobile", "tmobile", "t mobile")),
+    ("at&t", ("at&t", "at t ", "atandt")),
+    ("verizon", ("verizon",)),
+    ("sprint", ("sprint",)),
+)
+
+_UNLOCKED_MARKERS = ("unlocked", "sim free", "sim-free", "simfree", "carrier free", "carrier-free")
+
+# Offers whose price is only real if you open a new line, port a number in or
+# trade a phone in — useless when you are activating on a line you already have.
+_NEW_LINE_MARKERS = (
+    "new line",
+    "new-line",
+    "additional line",
+    "port-in",
+    "port in",
+    "new customer",
+    "new account",
+    "switch to",
+    "trade-in required",
+    "requires trade",
+    "with trade-in",
+    "w/ trade",
+    "trade in required",
+    "with qualified activation",
+)
+
+
+def normalize_carrier(text: Optional[str]) -> Optional[str]:
+    """Return the carrier a listing is tied to, or ``"unlocked"``.
+
+    ``None`` means the text says nothing either way — common on retail
+    listings, and handled by ``criteria.allow_unknown_carrier``.
+    """
+    if not text:
+        return None
+    lowered = re.sub(r"\s+", " ", text.lower())
+    locked_to = re.search(r"locked (?:to|for) ([a-z&. -]+)", lowered)
+    if locked_to:
+        for carrier, markers in _CARRIER_MARKERS:
+            if any(marker in locked_to.group(1) for marker in markers):
+                return carrier
+    # "Unlocked" wins over a carrier name: "Unlocked, works with T-Mobile".
+    if any(marker in lowered for marker in _UNLOCKED_MARKERS):
+        return "unlocked"
+    for carrier, markers in _CARRIER_MARKERS:
+        if any(marker in lowered for marker in markers):
+            return carrier
+    return None
+
+
+def carrier_label(carrier: Optional[str]) -> str:
+    if not carrier:
+        return "carrier not stated"
+    return CARRIER_LABELS.get(carrier, carrier)
+
+
+def requires_new_line(text: Optional[str]) -> bool:
+    """True when the listing's price is conditional on a new line or trade-in."""
+    if not text:
+        return False
+    lowered = re.sub(r"\s+", " ", text.lower())
+    return any(marker in lowered for marker in _NEW_LINE_MARKERS)
+
+
 @dataclass(frozen=True)
 class Listing:
     """One offer for one phone, as returned by a source."""
@@ -153,6 +251,8 @@ class Listing:
     storage_gb: Optional[int] = None
     screen_inches: Optional[float] = None
     seller: Optional[str] = None
+    carrier: Optional[str] = None          # "unlocked", "t-mobile", … or None
+    needs_new_line: bool = False           # price requires a new line / trade-in
     in_stock: bool = True
     extra: dict = field(default_factory=dict)
 
@@ -166,6 +266,8 @@ class Listing:
         parts = [self.model or self.title]
         if self.storage_gb:
             parts.append(f"{self.storage_gb}GB" if self.storage_gb < 1024 else f"{self.storage_gb // 1024}TB")
+        if self.carrier:
+            parts.append(f"({carrier_label(self.carrier)})")
         return " ".join(parts)
 
     def enriched(self) -> "Listing":
@@ -177,6 +279,12 @@ class Listing:
             screen = IPHONE_SCREEN_INCHES.get(model)
         if screen is None:
             screen = parse_screen_inches(self.title)
+        carrier = self.carrier
+        if carrier:
+            carrier = normalize_carrier(carrier) or carrier.lower()
+        else:
+            carrier = normalize_carrier(self.title)
+        needs_new_line = self.needs_new_line or requires_new_line(self.title)
         condition = self.condition
         if condition in ("", "unknown", None):
             condition = normalize_condition(self.title)
@@ -194,6 +302,8 @@ class Listing:
             storage_gb=storage,
             screen_inches=screen,
             seller=self.seller,
+            carrier=carrier,
+            needs_new_line=needs_new_line,
             in_stock=self.in_stock,
             extra=dict(self.extra),
         )

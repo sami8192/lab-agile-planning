@@ -2,7 +2,16 @@
   "criteria": {
     "min_screen_inches": 6.5,
     "min_storage_gb": 256,
-    "conditions": ["new"],
+    "conditions": [
+      "new"
+    ],
+    "require_unlocked": true,
+    "allowed_carriers": [
+      "unlocked",
+      "t-mobile"
+    ],
+    "allow_unknown_carrier": true,
+    "exclude_new_line_offers": true,
     "models": [],
     "exclude_models": [],
     "max_price": null,
@@ -38,7 +47,7 @@
       "enabled": false,
       "client_id": "${EBAY_CLIENT_ID}",
       "client_secret": "${EBAY_CLIENT_SECRET}",
-      "query": "Apple iPhone 17 Pro Max 256GB",
+      "query": "Apple iPhone 17 Pro Max 256GB unlocked",
       "marketplace": "EBAY_US"
     },
     {
@@ -48,15 +57,21 @@
       "url": "https://www.apple.com/shop/buy-iphone/iphone-17-pro",
       "title": "Apple iPhone 17 Pro Max 256GB",
       "condition": "new",
-      "storage_gb": 256
+      "storage_gb": 256,
+      "carrier": "unlocked"
     },
     {
       "type": "custom_json",
       "name": "my-retailer-api",
       "enabled": false,
       "url": "https://api.example.com/v1/search",
-      "params": { "q": "iphone", "condition": "new" },
-      "headers": { "Authorization": "Bearer ${RETAILER_TOKEN}" },
+      "params": {
+        "q": "iphone",
+        "condition": "new"
+      },
+      "headers": {
+        "Authorization": "Bearer ${RETAILER_TOKEN}"
+      },
       "items_path": "data.products",
       "fields": {
         "id": "sku",

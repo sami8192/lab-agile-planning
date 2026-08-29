@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Iterable, Optional
 
 from .config import Criteria
-from .models import Listing
+from .models import Listing, carrier_label
 
 
 @dataclass(frozen=True)
@@ -49,6 +49,17 @@ def evaluate(listing: Listing, criteria: Criteria) -> Optional[str]:
             return "screen size unknown"
     elif listing.screen_inches < criteria.min_screen_inches:
         return f'{listing.screen_inches}" screen below the {criteria.min_screen_inches}" minimum'
+    if criteria.require_unlocked:
+        if listing.carrier is None:
+            if not criteria.allow_unknown_carrier:
+                return "carrier lock status not stated"
+        elif listing.carrier not in criteria.allowed_carriers:
+            return (
+                f"locked to {carrier_label(listing.carrier)}; want "
+                f"{' or '.join(carrier_label(c) for c in criteria.allowed_carriers)}"
+            )
+    if criteria.exclude_new_line_offers and listing.needs_new_line:
+        return "price requires a new line, port-in or trade-in"
     if criteria.max_price is not None and listing.price > criteria.max_price:
         return f"{listing.price:.2f} above the {criteria.max_price:.2f} price ceiling"
     return None

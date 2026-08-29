@@ -27,7 +27,7 @@ def test_check_runs_and_writes_state(tmp_path, capsys):
     path = write_config(tmp_path)
     assert main(["-c", path, "check"]) == EXIT_OK
     out = capsys.readouterr().out
-    assert "4 match the criteria" in out
+    assert "5 match the criteria" in out
     assert "no price drops" in out
     assert (tmp_path / "state" / "prices.json").is_file()
 
@@ -37,9 +37,9 @@ def test_check_detects_a_drop_on_the_second_pass(tmp_path, capsys):
     capsys.readouterr()
     assert main(["-c", write_config(tmp_path, price_delta=-150), "check"]) == EXIT_OK
     out = capsys.readouterr().out
-    assert "4 price drop(s)" in out
+    assert "5 price drop(s)" in out
     assert "push sent" in out
-    assert "iPhone 17 Pro Max 256GB: $1,199 → $1,049" in out
+    assert "iPhone 17 Pro Max 256GB (Unlocked): $1,199 → $1,049" in out
 
 
 def test_dry_run_leaves_state_untouched(tmp_path):
@@ -53,6 +53,8 @@ def test_explain_lists_rejections(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "condition is refurbished" in out
     assert "below the 6.5\" minimum" in out
+    assert "locked to AT&T" in out
+    assert "requires a new line" in out
 
 
 def test_json_output_is_machine_readable(tmp_path, capsys):
@@ -62,7 +64,7 @@ def test_json_output_is_machine_readable(tmp_path, capsys):
     # The console notifier prints the push itself first; the report follows as JSON.
     out = capsys.readouterr().out
     payload = json.loads(out[out.index("{"):])
-    assert payload["eligible"] == 4
+    assert payload["eligible"] == 5
     assert payload["notified"] is True
     assert payload["drops"][0]["drop_percent"] > 0
     assert payload["drops"][0]["storage_gb"] >= 256
@@ -125,7 +127,7 @@ def test_source_failures_are_reported_but_do_not_crash(tmp_path, capsys):
     open(path, "w").write(json.dumps(config))
     assert main(["-c", path, "check"]) == EXIT_RUN_ERRORS
     captured = capsys.readouterr()
-    assert "4 match the criteria" in captured.out  # the healthy source still ran
+    assert "5 match the criteria" in captured.out  # the healthy source still ran
     assert "sample fixture not found" in captured.err
 
 

@@ -24,7 +24,7 @@ def test_dig_walks_dicts_and_lists():
 
 def test_sample_source_reads_the_bundled_fixture():
     listings = list(build_source({"type": "sample", "name": "demo"}).fetch())
-    assert len(listings) == 7
+    assert len(listings) == 10
     assert any(listing.title.startswith("Apple iPhone 17 Pro Max 256GB") for listing in listings)
 
 
@@ -81,6 +81,35 @@ def test_custom_json_source_maps_fields(monkeypatch):
     listing = listings[0].enriched()
     assert (listing.key, listing.price, listing.currency) == ("shop:A1", 1199.0, "USD")
     assert listing.model == "iPhone 17 Pro Max" and listing.storage_gb == 256
+    assert listing.carrier is None and listing.needs_new_line is False
+
+
+def test_custom_json_source_maps_carrier_fields(monkeypatch):
+    payload = {
+        "products": [
+            {
+                "sku": "A1",
+                "name": "Apple iPhone 17 Pro Max 256GB",
+                "price": 1199.0,
+                "carrier": "T-Mobile",
+                "promo": {"new_line_only": True},
+            }
+        ]
+    }
+    monkeypatch.setattr(json_module, "get_json", lambda url, **kwargs: payload)
+    listing = list(
+        build_source(
+            {
+                "type": "custom_json",
+                "name": "shop",
+                "url": "https://api.example/search",
+                "items_path": "products",
+                "fields": {"id": "sku", "title": "name", "carrier": "carrier", "needs_new_line": "promo.new_line_only"},
+            }
+        ).fetch()
+    )[0].enriched()
+    assert listing.carrier == "t-mobile"
+    assert listing.needs_new_line is True
 
 
 def test_custom_json_source_requires_a_url():
@@ -119,6 +148,16 @@ def test_custom_html_source_reads_json_ld(monkeypatch):
     assert listing.in_stock is True
     assert listing.model == "iPhone 17 Pro Max"
     assert listing.storage_gb == 256
+
+
+def test_custom_html_source_takes_the_carrier_from_config(monkeypatch):
+    monkeypatch.setattr(html_module, "request", lambda url, **kwargs: PAGE)
+    listing = list(
+        build_source(
+            {"type": "custom_html", "name": "store", "url": "https://shop.example/p", "carrier": "unlocked"}
+        ).fetch()
+    )[0].enriched()
+    assert listing.carrier == "unlocked"
 
 
 def test_custom_html_source_falls_back_to_a_regex(monkeypatch):
@@ -168,6 +207,7 @@ def test_bestbuy_source_normalises_products(monkeypatch):
                     "regularPrice": 1199.99,
                     "url": "https://bestbuy.com/x",
                     "onlineAvailability": True,
+                    "carrier": "Unlocked",
                 }
             ]
         }
@@ -179,7 +219,9 @@ def test_bestbuy_source_normalises_products(monkeypatch):
     assert listing.key == "bb:6418599"
     assert listing.price == 1099.99
     assert listing.condition == "new"
+    assert listing.carrier == "unlocked"
     assert listing.extra["regular_price"] == 1199.99
+    assert "carrier" in captured["params"]["show"]
 
 
 def test_bestbuy_source_requires_an_api_key():

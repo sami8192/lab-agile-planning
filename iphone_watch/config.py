@@ -45,6 +45,10 @@ class Criteria:
     currency: Optional[str] = "USD"
     require_in_stock: bool = True
     allow_unknown_models: bool = False    # unknown screen size => not provably large
+    require_unlocked: bool = True         # reject phones locked to another carrier
+    allowed_carriers: tuple[str, ...] = ("unlocked", "t-mobile")
+    allow_unknown_carrier: bool = True    # most retail listings never say
+    exclude_new_line_offers: bool = True  # prices that need a new line / trade-in
 
     @classmethod
     def from_dict(cls, data: dict) -> "Criteria":
@@ -59,6 +63,12 @@ class Criteria:
             currency=data.get("currency", "USD"),
             require_in_stock=bool(data.get("require_in_stock", True)),
             allow_unknown_models=bool(data.get("allow_unknown_models", False)),
+            require_unlocked=bool(data.get("require_unlocked", True)),
+            allowed_carriers=tuple(
+                str(c).strip().lower().replace(" ", "-") for c in data.get("allowed_carriers", ["unlocked", "t-mobile"])
+            ),
+            allow_unknown_carrier=bool(data.get("allow_unknown_carrier", True)),
+            exclude_new_line_offers=bool(data.get("exclude_new_line_offers", True)),
         )
 
 
