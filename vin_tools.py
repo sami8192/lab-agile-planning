@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Offline VIN authentication and Jeep Wrangler decoding.
+Offline VIN authentication, with Jeep Wrangler and Volvo decoding.
 
 No network access required. The check digit (ISO 3779 / 49 CFR Part 565) is
 computed purely from the VIN's own characters, which is what makes it useful
@@ -33,12 +33,17 @@ PLANT = {
     'W': ('Toledo Assy', 'Toledo Assembly Complex, Toledo OH'),
     'C': ('Jefferson N', 'Jefferson North Assembly, Detroit MI'),
     'D': ('Belvidere', 'Belvidere Assembly, Belvidere IL'),
+    # Volvo (WMI YV1/YV4). Numeric codes do not collide with the Jeep letters above.
+    '1': ('Torslanda', 'Torslanda Plant, Gothenburg, Sweden'),
+    '2': ('Ghent', 'Ghent Plant, Belgium'),
 }
 
 WMI = {
     '1J4': 'Chrysler Group LLC / Jeep, USA-built MPV (through MY2011)',
     '1J8': 'Chrysler Group LLC / Jeep, USA-built MPV',
     '1C4': 'FCA US LLC / Chrysler Group, USA-built MPV (MY2012 onward)',
+    'YV4': 'Volvo Car Corporation, Sweden - multipurpose vehicle (XC70, XC60, XC90)',
+    'YV1': 'Volvo Car Corporation, Sweden - passenger car',
 }
 
 

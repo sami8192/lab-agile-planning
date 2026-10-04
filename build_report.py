@@ -198,9 +198,8 @@ def _inner(canvas, doc):
     canvas.line(MARGIN, PAGE_H - 0.62 * inch, PAGE_W - MARGIN, PAGE_H - 0.62 * inch)
     canvas.setFont('Helvetica', 7.4)
     canvas.setFillColor(GREY)
-    canvas.drawString(MARGIN, PAGE_H - 0.55 * inch, REPORT_TITLE)
-    canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 0.55 * inch,
-                           '80127 + CA + TX  |  $6,000-$18,000')
+    canvas.drawString(MARGIN, PAGE_H - 0.55 * inch, doc.header_left)
+    canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 0.55 * inch, doc.header_right)
     canvas.line(MARGIN, 0.66 * inch, PAGE_W - MARGIN, 0.66 * inch)
     canvas.setFont('Helvetica', 7.4)
     canvas.drawString(MARGIN, 0.5 * inch, date.today().strftime('%B %d, %Y'))
@@ -210,15 +209,20 @@ def _inner(canvas, doc):
     canvas.restoreState()
 
 
-def build(path):
+def build(path, story_fn=None, title=REPORT_TITLE,
+          header_right='80127 + CA + TX  |  $6,000-$18,000',
+          subject='Used Jeep Wrangler acquisition analysis, ZIP 80127 plus California and '
+                  'Texas, $6,000-$18,000'):
+    """Render a report. Other report scripts reuse this with their own story_fn."""
     doc = BaseDocTemplate(
         path, pagesize=letter,
         leftMargin=MARGIN, rightMargin=MARGIN,
         topMargin=0.85 * inch, bottomMargin=0.85 * inch,
-        title=REPORT_TITLE,
+        title=title,
         author='Vehicle research brief',
-        subject='Used Jeep Wrangler acquisition analysis, ZIP 80127 plus California and '
-                'Texas, $6,000-$18,000')
+        subject=subject)
+    doc.header_left = title
+    doc.header_right = header_right
 
     fw = PAGE_W - 2 * MARGIN
     cover_frame = Frame(MARGIN, MARGIN, fw, PAGE_H - 2 * MARGIN, id='cover',
@@ -229,7 +233,7 @@ def build(path):
         PageTemplate(id='cover', frames=[cover_frame], onPage=_cover),
         PageTemplate(id='body', frames=[body_frame], onPage=_inner),
     ])
-    doc.build(story(fw))
+    doc.build((story_fn or story)(fw))
     return path
 
 
