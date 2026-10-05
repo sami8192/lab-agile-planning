@@ -28,7 +28,7 @@ MODEL_YEAR = dict(zip(
     list(range(1997, 2027))))
 
 PLANT = {
-    'P': ('Toledo North', 'Toledo North Assembly, Toledo OH'),
+    'P': ('Toledo #2', "Toledo, OH - plant code P ('Toledo #2' in TJ-era decoder guides)"),
     'L': ('Toledo South', 'Toledo South / Toledo Supplier Park, Toledo OH'),
     'W': ('Toledo Assy', 'Toledo Assembly Complex, Toledo OH'),
     'C': ('Jefferson N', 'Jefferson North Assembly, Detroit MI'),

@@ -947,7 +947,8 @@ def section_vin(fw):
          'digit.', 'VERIFIED'],
         ['11', 'Assembly plant',
          'Every Wrangler in this report was built in Toledo, Ohio - <b>L</b> = Toledo South / '
-         'Supplier Park, <b>P</b> = Toledo North, <b>W</b> = Toledo Assembly.', 'VERIFIED'],
+         'Supplier Park, <b>P</b> = Toledo #2 (as TJ-era decoder guides name it), <b>W</b> = '
+         'Toledo Assembly.', 'VERIFIED'],
         ['12-17', 'Sequential production serial',
          'Build order. Useful only for spotting two "identical" listings that are secretly the '
          'same car.', 'VERIFIED'],
