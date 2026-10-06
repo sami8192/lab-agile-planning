@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wrangler Tracker</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d2321;--mute:#66706b;--line:#dcdad2;--accent:#3d6b3a;--accent-ink:#fff;
+--good:#2e7d32;--warn:#b26a00;--bad:#b3261e;--goodbg:#e3f1e3;--warnbg:#fbeed8;--badbg:#f9e0de}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#151815;--card:#1e221e;--ink:#e8ebe6;--mute:#9aa49d;--line:#333a34;--accent:#7fb77a;--accent-ink:#11160f;
+--good:#7fd085;--warn:#f0b35a;--bad:#ff8a80;--goodbg:#1f3322;--warnbg:#3a2d14;--badbg:#3d1f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1200px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:24px;margin:0 0 4px}h2{font-size:18px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 4px}
+.sub{color:var(--mute);margin:0 0 16px}
+.crit{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:13px}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font:inherit;color:var(--mute);cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--accent);font-weight:600}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.bar label{display:flex;flex-direction:column;font-size:12px;color:var(--mute);gap:2px}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input,select,textarea{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:7px 14px;cursor:pointer}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--bad);color:#fff}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:980px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+th{font-size:12px;color:var(--mute);cursor:pointer;white-space:nowrap;user-select:none}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:12px;font-weight:600}
+.t-target{background:var(--goodbg);color:var(--good)}.t-caution{background:var(--warnbg);color:var(--warn)}.t-avoid{background:var(--badbg);color:var(--bad)}
+.over{color:var(--bad);font-weight:600}.mute{color:var(--mute)}.small{font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.grid a{display:block;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--ink);text-decoration:none}
+.grid a:hover{border-color:var(--accent)}.grid a b{display:block}.grid a span{color:var(--mute);font-size:12px}
+.note{border-left:4px solid var(--warn);background:var(--warnbg);padding:10px 14px;border-radius:6px;margin:0 0 16px;font-size:14px}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);max-width:640px;width:calc(100% - 24px);padding:18px}
+dialog::backdrop{background:#0008}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.f label{display:flex;flex-direction:column;font-size:12px;color:var(--mute);gap:2px}.f .wide{grid-column:1/-1}
+ul.chk{padding-left:20px;margin:6px 0}ul.chk li{margin:3px 0}
+a{color:var(--accent)}
+@media(max-width:600px){h1{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Jeep Wrangler Tracker</h1>
+<p class="sub">Home base 80127 (Littleton, CO) · will travel TX → CA · California has been cheaper with more stock than Colorado</p>
+<div class="crit">
+<span class="chip">Mileage ≤ 110,000</span><span class="chip">Price ≤ $16,000</span>
+<span class="chip">Prefer: service history + owner history</span><span class="chip">Older models OK</span><span class="chip">Bad years excluded</span>
+</div>
+
+<nav role="tablist">
+<button role="tab" data-p="list" aria-selected="true">Listings</button>
+<button role="tab" data-p="search" aria-selected="false">Live search links</button>
+<button role="tab" data-p="years" aria-selected="false">Model-year guide</button>
+<button role="tab" data-p="vet" aria-selected="false">Vetting checklist</button>
+</nav>
+
+<!-- LISTINGS -->
+<section class="panel on" id="p-list">
+<div class="note"><b>Seed rows are unverified leads.</b> They came from search-result snippets (no VIN, no seller link). Prices and availability may be stale. Confirm each one, get the VIN and pull a CarFax before spending time on it.</div>
+<div class="bar">
+<label>Hide avoid-years<select id="fAvoid"><option value="1">Yes</option><option value="0">No</option></select></label>
+<label>Region<select id="fReg"><option value="">All</option><option>CA</option><option>CO</option><option>TX</option><option>Other</option></select></label>
+<label>Status<select id="fStat"><option value="">All</option></select></label>
+<label>Over limits<select id="fOver"><option value="0">Show</option><option value="1">Hide</option></select></label>
+<label>Search<input id="fQ" placeholder="trim, city, VIN…"></label>
+<button class="btn" id="add">+ Add listing</button>
+<button class="btn alt" id="exp">Export CSV</button>
+<button class="btn alt" id="expj">Export JSON</button>
+<button class="btn alt" id="imp">Import JSON</button>
+<button class="btn alt" id="reset">Reset to seed</button>
+<input type="file" id="file" accept=".json" hidden>
+</div>
+<div class="small mute" id="count" style="margin-bottom:6px"></div>
+<div class="tw"><table id="tbl"><thead><tr>
+<th data-k="score">Score</th><th data-k="year">Vehicle</th><th data-k="price">Price</th><th data-k="miles">Miles</th>
+<th data-k="city">Location</th><th data-k="dist">~Road mi from 80127</th><th data-k="owners">Owners</th><th>History</th><th data-k="status">Status</th><th></th>
+</tr></thead><tbody></tbody></table></div>
+<p class="small mute">Score (0–100) rewards good model year, low miles, low price, 1 owner, service records and a clean CarFax; heavily penalises accidents, branded titles and avoid-years. Unknowns score neutral. It ranks leads, it does not replace a pre-purchase inspection.</p>
+</section>
+
+<!-- SEARCH LINKS -->
+<section class="panel" id="p-search">
+<p class="sub">Filters pre-set to ≤ $16,000, ≤ 110,000 miles. Site URL parameters change over time, so if a filter doesn't stick, set it manually on the page. Most sites also let you filter to 1-owner / accident-free, and save the search for email alerts, which is the best way to catch a good one fast.</p>
+<div id="links"></div>
+</section>
+
+<!-- YEARS -->
+<section class="panel" id="p-years">
+<p class="sub">Compiled from owner-forum and review-site consensus plus recall data. Sources disagree in places (flagged below). Treat it as a filter, not gospel, and always check the specific VIN.</p>
+<div class="tw"><table style="min-width:700px"><thead><tr><th>Years</th><th>Generation / engine</th><th>Verdict</th><th>Why</th></tr></thead><tbody id="yrs"></tbody></table></div>
+<h2>Recurring problems to inspect for on any JK</h2>
+<ul class="chk">
+<li><b>Death wobble</b>: usually a worn track bar, ball joints or steering stabilizer. Test at 45–60 mph over a bump; check for lift kits.</li>
+<li><b>TIPM / BCM electrical faults</b> (2007–2018): random stalling, no-start, fuel pump relay. Ask whether it has been replaced.</li>
+<li><b>3.6L Pentastar (2012+)</b>: listen for ticking or knocking when warm (lifter/rocker needle bearing, left head failure on early cars). Verify the oil-cooler and power-steering-line recalls were done on 2012–13 automatics.</li>
+<li><b>Open airbag recalls</b>: Takata inflator and clockspring recalls covered 2007–2016. Confirm all are completed by VIN, because the fix is free.</li>
+<li><b>Hardtop leaks</b>, soft-top condition, and underbody rust (less of an issue on California cars).</li>
+<li><b>TJ (1997–2006)</b>: frame rust is the deal-breaker. Inspect the inside of the frame with a scope or tap test, plus the tub, fenders and tailgate.</li>
+</ul>
+</section>
+
+<!-- VETTING -->
+<section class="panel" id="p-vet">
+<div class="grid" style="margin-bottom:16px">
+<a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noopener"><b>NHTSA recall lookup</b><span>Enter the VIN: open recalls, free fixes</span></a>
+<a href="https://www.nicb.org/vincheck" target="_blank" rel="noopener"><b>NICB VINCheck</b><span>Free theft and total-loss (salvage) check</span></a>
+<a href="https://www.carfax.com/" target="_blank" rel="noopener"><b>CarFax</b><span>Owners, service records, accidents, title</span></a>
+<a href="https://www.autocheck.com/" target="_blank" rel="noopener"><b>AutoCheck</b><span>Second opinion; sometimes catches what CarFax misses</span></a>
+</div>
+<div class="card">
+<h3 style="margin-top:0">Per-listing steps</h3>
+<ol class="chk">
+<li>Get the VIN, then run NHTSA recalls and NICB VINCheck (free), then CarFax / AutoCheck.</li>
+<li><b>Owner history</b>: 1–2 owners ideal. Check whether it was a rental, fleet, or commercial vehicle. Check the registration states (a CA car avoids salt, while an ex-Northeast car may have rust).</li>
+<li><b>Service history</b>: look for regular oil changes (every ≤ 7.5k mi), transmission/transfer-case/axle fluid service, and the recall and TIPM work above. Ask for receipts.</li>
+<li><b>Title</b>: must be clean. Walk away from salvage, rebuilt, flood or lemon-law buyback. A price far below market (for example, a 2015–2017 under about $11k) is a red flag until explained.</li>
+<li><b>Accidents</b>: frame or structural damage is a hard no. Airbag deployment is a hard no.</li>
+<li><b>Modifications</b>: stock or lightly modified is best. Heavy lift or off-road abuse raises wear on the steering, axles and driveline.</li>
+<li><b>Pre-purchase inspection</b> by an independent shop (or Jeep dealer) before paying. For out-of-state cars, book one in the seller's city, as it is cheap insurance against a $1,500+ surprise.</li>
+<li><b>Out-of-state purchase</b>: Colorado needs a VIN verification and title transfer, and the Denver metro area requires emissions testing on older vehicles. Confirm the current rules with the Colorado DMV before buying, and get a written bill of sale, lien release and all keys. Budget for transport (roughly $900–$1,400 from California) or a one-way trip.</li>
+</ol>
+</div>
+</section>
+</div>
+
+<dialog id="dlg"><form method="dialog" id="frm">
+<h2 style="margin-top:0" id="dtitle">Listing</h2>
+<div class="f">
+<label>Year<input name="year" type="number" min="1997" max="2026" required></label>
+<label>Trim<input name="trim" placeholder="Sport, Sahara, Rubicon…"></label>
+<label>Body<select name="body"><option>2-door</option><option>4-door (Unlimited)</option><option selected value="">Unknown</option></select></label>
+<label>Price ($)<input name="price" type="number" min="0" required></label>
+<label>Miles<input name="miles" type="number" min="0" required></label>
+<label>City<input name="city"></label>
+<label>State<input name="state" maxlength="2" placeholder="CA"></label>
+<label>~Road miles from 80127<input name="dist" type="number" min="0"></label>
+<label>Seller<select name="seller"><option value="">Unknown</option><option>Dealer</option><option>Private</option></select></label>
+<label>Owners<input name="owners" type="number" min="1" placeholder="unknown"></label>
+<label>Service records<select name="service"><option value="unknown">Unknown</option><option value="yes">Yes, documented</option><option value="partial">Partial</option><option value="no">None</option></select></label>
+<label>Accidents<select name="accidents"><option value="unknown">Unknown</option><option value="none">None reported</option><option value="minor">Minor</option><option value="major">Major / structural</option></select></label>
+<label>Title<select name="title"><option value="unknown">Unknown</option><option value="clean">Clean</option><option value="branded">Branded (salvage etc.)</option></select></label>
+<label>Status<select name="status" id="stSel"></select></label>
+<label class="wide">VIN<input name="vin" maxlength="17"></label>
+<label class="wide">Listing URL<input name="url" type="url"></label>
+<label class="wide">Source<input name="source" placeholder="CarGurus, Craigslist…"></label>
+<label class="wide">Notes<textarea name="note" rows="3"></textarea></label>
+</div>
+<div style="display:flex;gap:8px;justify-content:space-between;margin-top:14px">
+<button type="button" class="btn danger" id="del">Delete</button>
+<span><button type="button" class="btn alt" id="cancel">Cancel</button> <button class="btn" id="save" value="save">Save</button></span>
+</div></form></dialog>
+
+<script>
+const MAX_PRICE=16000, MAX_MILES=110000;
+const STATUSES=["New lead","Contacted","VIN + CarFax pulled","Inspection booked","Test-driven","Negotiating","Passed","Bought"];
+
+/* ---------- model-year verdicts ---------- */
+const YEARS=[
+ {y:[1997,1998],g:"TJ 2.5L / 4.0L",t:"avoid",w:"Early-TJ fuel-delivery and ECU faults reported; oldest frames have the worst rust."},
+ {y:[1999,2000],g:"TJ 4.0L",t:"caution",w:"Fine mechanically if the frame is clean; age and rust are the risk."},
+ {y:[2001,2001],g:"TJ 4.0L",t:"avoid",w:"Electrical problems most reported this year."},
+ {y:[2002,2002],g:"TJ 4.0L",t:"caution",w:"Oil leaks / seal leaks more commonly reported."},
+ {y:[2003,2006],g:"TJ 4.0L (2003–06 Rubicon; 2004–06 LJ)",t:"target",w:"Best TJ years. Reliable 4.0L inline-six, but only buy after a frame inspection. Rubicons run above budget."},
+ {y:[2007,2008],g:"JK 3.8L V6",t:"avoid",w:"First JK years. TIPM failures, weak 3.8L, airbag clockspring/Takata recalls."},
+ {y:[2009,2011],g:"JK 3.8L V6",t:"caution",w:"Better than 2007–08 but still the thirsty 3.8L and TIPM. 2011 is the best of the three. Acceptable if cheap, documented and well-maintained."},
+ {y:[2012,2012],g:"JK 3.6L Pentastar (first year)",t:"avoid",w:"First-year Pentastar: oil cooler / cylinder head and rocker-arm failures, plus the transmission-cooler-line recall. Excluded."},
+ {y:[2013,2013],g:"JK 3.6L Pentastar",t:"caution",w:"Most early bugs fixed, but 2012–13 automatics share the cooler-line recall and Takata inflator recalls. Verify recalls done."},
+ {y:[2014,2014],g:"JK 3.6L Pentastar",t:"caution",w:"Sources conflict: one guide lists it as a year to avoid (engine contamination/misfire reports), others call 2014–17 good. Kept visible but flagged; scrutinise engine health."},
+ {y:[2015,2017],g:"JK 3.6L Pentastar (mature)",t:"target",w:"Consensus sweet spot: engine and casting issues sorted. Check the clockspring / Takata recalls (free fixes) and 2017 brake-switch/fuel-valve recalls."},
+ {y:[2018,2018],g:"JK Final Edition / JL launch",t:"target",w:"Final JK (2018) is solid and rarely under $16k. The new JL of 2018 is a different story (see below)."},
+ {y:[2019,2019],g:"JL (first-gen)",t:"avoid",w:"Early JL electrical glitches, eTorque quirks and frame weld issues; also priced above $16k. Excluded."}
+];
+function tierOf(y){const r=YEARS.find(r=>y>=r.y[0]&&y<=r.y[1]);return r?r.t:(y>=2020?"target":"caution")}
+const TL={target:"Target",caution:"Caution",avoid:"Avoid"};
+
+/* ---------- seed leads (UNVERIFIED search-snippet data, retrieved 2026-10-06) ---------- */
+const S="Unverified lead from a search snippet (no VIN or listing link). Confirm price and availability, then pull CarFax.";
+const SEED=[
+ {id:"s1",year:2015,trim:"Unlimited Sport 4WD",body:"4-door (Unlimited)",price:15011,miles:73809,city:"Brea",state:"CA",dist:1050,source:"CarGurus",seller:"Dealer",note:S},
+ {id:"s2",year:2015,trim:"Unlimited Sport",body:"4-door (Unlimited)",price:14995,miles:69434,city:"Fontana",state:"CA",dist:1000,source:"TrueCar",seller:"Dealer",note:S},
+ {id:"s3",year:2015,trim:"Sport 4WD",body:"",price:14520,miles:100377,city:"Fontana",state:"CA",dist:1000,source:"CarGurus",seller:"Dealer",note:S},
+ {id:"s4",year:2015,trim:"Sport (tow group)",body:"",price:13300,miles:83000,city:"Los Angeles area",state:"CA",dist:1030,source:"Autotrader",seller:"Private",accidents:"none",note:S+" Listing said no accidents; private seller."},
+ {id:"s5",year:2015,trim:"Sport",body:"",price:13995,miles:91171,city:"San Diego area",state:"CA",dist:1090,source:"iSeeCars",note:S},
+ {id:"s6",year:2015,trim:"(trim unknown)",body:"",price:12888,miles:105123,city:"Santa Monica",state:"CA",dist:1040,source:"CARFAX",note:S},
+ {id:"s7",year:2016,trim:"Willys Wheeler",body:"",price:14495,miles:108091,city:"Los Angeles area",state:"CA",dist:1030,source:"CARFAX",note:S+" Near the mileage cap."},
+ {id:"s8",year:2014,trim:"Dragon Edition",body:"",price:15580,miles:102750,city:"Los Angeles area",state:"CA",dist:1030,source:"CARFAX",note:S+" 2014: sources conflict on reliability; check engine."},
+ {id:"s9",year:2015,trim:"Sport (Firecracker Red)",body:"",price:15790,miles:79713,city:"Littleton area",state:"CO",dist:10,source:"Dealer listing aggregator",seller:"Dealer",note:S+" Closest lead to home."},
+ {id:"s10",year:2013,trim:"Unlimited",body:"4-door (Unlimited)",price:14000,miles:0,city:"Littleton",state:"CO",dist:5,source:"Craigslist",seller:"Private",note:S+" MILEAGE NOT KNOWN (0 is a placeholder): ask the seller."},
+ {id:"s11",year:2016,trim:"Unlimited Sport",body:"4-door (Unlimited)",price:10200,miles:68323,city:"Grand Prairie",state:"TX",dist:780,source:"Search snippet",note:S+" Price is far below market: suspect a branded title or hidden damage. Check before anything else."},
+ {id:"s12",year:2016,trim:"Unlimited Rubicon Hard Rock",body:"4-door (Unlimited)",price:15990,miles:110040,city:"Fort Worth",state:"TX",dist:770,source:"Search snippet",note:S+" 40 miles over the cap; only worth it if the history is excellent and the seller negotiates."}
+];
+
+/* ---------- state ---------- */
+const KEY="jeepTracker.v1";
+let L=[];
+function load(){try{const r=localStorage.getItem(KEY);if(r){L=JSON.parse(r);return}}catch(e){}L=SEED.map(s=>({status:"New lead",owners:null,service:"unknown",accidents:"unknown",title:"unknown",vin:"",url:"",...s}))}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(L))}catch(e){}}
+load();
+
+/* ---------- scoring ---------- */
+function score(r){
+ let s=50; const t=tierOf(+r.year);
+ s+= t==="target"?20: t==="avoid"?-40:0;
+ s+= (1-Math.min(+r.miles,MAX_MILES*1.2)/MAX_MILES)*20;
+ s+= (1-Math.min(+r.price,MAX_PRICE*1.2)/MAX_PRICE)*10;
+ if(r.owners==1)s+=10; else if(r.owners==2)s+=4; else if(r.owners>=4)s-=6;
+ s+= {yes:10,partial:4,no:-4}[r.service]||0;
+ s+= {none:10,minor:-8,major:-40}[r.accidents]||0;
+ if(r.title==="branded")s-=50; else if(r.title==="clean")s+=5;
+ return Math.max(0,Math.min(100,Math.round(s)));
+}
+const isOver=r=>+r.price>MAX_PRICE||+r.miles>MAX_MILES;
+const region=r=>["CA","CO","TX"].includes((r.state||"").toUpperCase())?r.state.toUpperCase():"Other";
+const fmt=n=>n==null||n===""?"–":Number(n).toLocaleString();
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- table ---------- */
+let sortK="score",sortD=-1;
+function render(){
+ const q=fQ.value.toLowerCase(),tb=document.querySelector("#tbl tbody");
+ let rows=L.filter(r=>
+  (fAvoid.value==="0"||tierOf(+r.year)!=="avoid")&&(!fReg.value||region(r)===fReg.value)&&
+  (!fStat.value||r.status===fStat.value)&&(fOver.value==="0"||!isOver(r))&&
+  (!q||JSON.stringify(r).toLowerCase().includes(q)));
+ rows=rows.map(r=>({...r,score:score(r)})).sort((a,b)=>{
+  const x=a[sortK],y=b[sortK];return (typeof x==="string"||typeof y==="string"?String(x??"").localeCompare(String(y??"")):(x??1e9)-(y??1e9))*sortD});
+ count.textContent=rows.length+" of "+L.length+" listings shown";
+ tb.innerHTML=rows.map(r=>{
+  const t=tierOf(+r.year);
+  const hist=[r.service==="yes"?"Service ✔":r.service==="partial"?"Service ~":r.service==="no"?"No service":"Service ?",
+   r.accidents==="none"?"No accidents":r.accidents==="unknown"?"Accidents ?":"Accident: "+r.accidents,
+   r.title==="branded"?"<b class=over>BRANDED</b>":r.title==="clean"?"Clean title":"Title ?"].join(" · ");
+  return `<tr data-id="${esc(r.id)}"><td><b>${r.score}</b></td>
+  <td><b>${esc(r.year)}</b> ${esc(r.trim)} <span class="tag t-${t}">${TL[t]}</span>
+   ${r.url?`<br><a href="${esc(r.url)}" target="_blank" rel="noopener">listing ↗</a>`:""}${r.vin?`<br><span class="small mute">${esc(r.vin)}</span>`:""}
+   ${r.note?`<br><span class="small mute">${esc(r.note)}</span>`:""}</td>
+  <td class="${+r.price>MAX_PRICE?"over":""}">$${fmt(r.price)}</td>
+  <td class="${+r.miles>MAX_MILES?"over":""}">${+r.miles?fmt(r.miles):"?"}</td>
+  <td>${esc(r.city)}${r.state?", "+esc(r.state):""}<br><span class="small mute">${esc(r.source)}${r.seller?" · "+esc(r.seller):""}</span></td>
+  <td>${fmt(r.dist)}</td><td>${r.owners||"?"}</td><td class="small">${hist}</td>
+  <td><select class="st">${STATUSES.map(s=>`<option${s===r.status?" selected":""}>${s}</option>`).join("")}</select></td>
+  <td><button class="btn alt ed">Edit</button></td></tr>`}).join("")||`<tr><td colspan=10 class="mute">No listings match these filters.</td></tr>`;
+}
+for(const s of STATUSES){fStat.add(new Option(s,s));stSel.add(new Option(s,s))}
+document.querySelector("#tbl thead").onclick=e=>{const k=e.target.dataset.k;if(!k)return;sortD=sortK===k?-sortD:(k==="score"?-1:1);sortK=k;render()};
+document.querySelector("#tbl tbody").onclick=e=>{const tr=e.target.closest("tr");if(!tr)return;
+ if(e.target.classList.contains("ed"))openDlg(tr.dataset.id)};
+document.querySelector("#tbl tbody").onchange=e=>{if(!e.target.classList.contains("st"))return;
+ const r=L.find(x=>x.id===e.target.closest("tr").dataset.id);r.status=e.target.value;persist();render()};
+[fAvoid,fReg,fStat,fOver].forEach(el=>el.onchange=render);fQ.oninput=render;
+
+/* ---------- add / edit ---------- */
+let editId=null;
+function openDlg(id){
+ editId=id;const r=id?L.find(x=>x.id===id):{status:"New lead",service:"unknown",accidents:"unknown",title:"unknown"};
+ dtitle.textContent=id?"Edit listing":"Add listing";del.style.display=id?"":"none";
+ for(const el of frm.elements){if(el.name)el.value=r[el.name]??""}
+ dlg.showModal();
+}
+add.onclick=()=>openDlg(null);cancel.onclick=()=>dlg.close();
+del.onclick=()=>{if(confirm("Delete this listing?")){L=L.filter(x=>x.id!==editId);persist();dlg.close();render()}};
+frm.onsubmit=e=>{
+ const o={};for(const el of frm.elements){if(el.name)o[el.name]=el.value}
+ for(const k of["year","price","miles","dist","owners"])o[k]=o[k]===""?null:+o[k];
+ o.state=(o.state||"").toUpperCase();
+ if(editId){Object.assign(L.find(x=>x.id===editId),o)}else{o.id="u"+Date.now();L.unshift(o)}
+ persist();render();
+};
+
+/* ---------- export / import ---------- */
+function dl(name,text,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href)}
+expj.onclick=()=>dl("wrangler-tracker.json",JSON.stringify(L,null,1),"application/json");
+exp.onclick=()=>{const cols=["year","trim","price","miles","city","state","dist","source","seller","owners","service","accidents","title","status","vin","url","note"];
+ const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+ dl("wrangler-tracker.csv",[cols.join(","),...L.map(r=>cols.map(c=>q(r[c])).join(","))].join("\n"),"text/csv")};
+imp.onclick=()=>file.click();
+file.onchange=async()=>{try{const d=JSON.parse(await file.files[0].text());if(!Array.isArray(d))throw 0;L=d;persist();render()}catch(e){alert("That file isn't a valid tracker JSON export.")}file.value=""};
+reset.onclick=()=>{if(confirm("Discard all edits and restore the original seed list?")){try{localStorage.removeItem(KEY)}catch(e){}load();render()}};
+
+/* ---------- search links ---------- */
+const enc=encodeURIComponent;
+const CL=(host,label)=>({n:label,u:`https://${host}.craigslist.org/search/cta?query=jeep+wrangler&max_price=${MAX_PRICE}&max_auto_miles=${MAX_MILES}&auto_title_status=1`,d:"Owner + dealer; clean titles only"});
+const GROUPS=[
+ {t:"Home (80127)",items:[
+  {n:"CarGurus: Wrangler near 80127",u:`https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?zip=80127&distance=100&entitySelectingHelper.selectedEntity=d494&maxPrice=${MAX_PRICE}&maxMileage=${MAX_MILES}`,d:"Shows deal rating + price history"},
+  {n:"Cars.com: Wrangler near 80127",u:`https://www.cars.com/shopping/results/?stock_type=used&makes[]=jeep&models[]=jeep-wrangler&list_price_max=${MAX_PRICE}&maximum_distance=100&mileage_max=${MAX_MILES}&zip=80127`,d:"Filter: 1-owner, no accidents"},
+  {n:"Autotrader: Wrangler near 80127",u:`https://www.autotrader.com/cars-for-sale/all-cars/jeep/wrangler?zip=80127&searchRadius=100&maxPrice=${MAX_PRICE}&maxMileage=${MAX_MILES}`,d:"Good private-seller coverage"},
+  {n:"TrueCar: Littleton, CO",u:"https://www.truecar.com/used-cars-for-sale/listings/jeep/wrangler/location-littleton-co/",d:"Set price/mileage in the filters"},
+  {n:"Craigslist Denver",u:CL("denver").u,d:CL("denver").d},
+  {n:"Craigslist Colorado Springs",u:CL("cosprings").u,d:CL("cosprings").d},
+  {n:"Craigslist Boulder",u:CL("boulder").u,d:CL("boulder").d}]},
+ {t:"California (cheaper + more stock)",items:[
+  {n:"CarGurus: California",u:"https://www.cargurus.com/Cars/l-Used-Jeep-Wrangler-California-d494_L2161",d:"Then set price ≤ $16k / ≤ 110k miles"},
+  {n:"CARFAX: Los Angeles",u:"https://www.carfax.com/Used-Jeep-Wrangler-Los-Angeles-CA_w376_c4914",d:"Native 1-owner / accident-free / service-record filters"},
+  {n:"Cars.com: Los Angeles",u:`https://www.cars.com/shopping/results/?stock_type=used&makes[]=jeep&models[]=jeep-wrangler&list_price_max=${MAX_PRICE}&maximum_distance=200&mileage_max=${MAX_MILES}&zip=90012`,d:"200-mile radius"},
+  {n:"Cars.com: San Diego",u:`https://www.cars.com/shopping/results/?stock_type=used&makes[]=jeep&models[]=jeep-wrangler&list_price_max=${MAX_PRICE}&maximum_distance=100&mileage_max=${MAX_MILES}&zip=92101`,d:""},
+  {n:"Cars.com: Sacramento / Bay Area",u:`https://www.cars.com/shopping/results/?stock_type=used&makes[]=jeep&models[]=jeep-wrangler&list_price_max=${MAX_PRICE}&maximum_distance=150&mileage_max=${MAX_MILES}&zip=95814`,d:""},
+  {n:"iSeeCars: San Diego under $15k",u:"https://www.iseecars.com/used_cars-t3018-jeep-wrangler-under-15000-in-san-diego-ca",d:"Raise price cap to $16k"},
+  {n:"Craigslist Los Angeles",u:CL("losangeles").u,d:CL("losangeles").d},
+  {n:"Craigslist Inland Empire",u:CL("inlandempire").u,d:CL("inlandempire").d},
+  {n:"Craigslist Orange County",u:CL("orangecounty").u,d:CL("orangecounty").d},
+  {n:"Craigslist San Diego",u:CL("sandiego").u,d:CL("sandiego").d},
+  {n:"Craigslist Sacramento",u:CL("sacramento").u,d:CL("sacramento").d},
+  {n:"Craigslist SF Bay Area",u:CL("sfbay").u,d:CL("sfbay").d}]},
+ {t:"Texas",items:[
+  {n:"Cars.com: Dallas",u:`https://www.cars.com/shopping/results/?stock_type=used&makes[]=jeep&models[]=jeep-wrangler&list_price_max=${MAX_PRICE}&maximum_distance=150&mileage_max=${MAX_MILES}&zip=75201`,d:""},
+  {n:"Cars.com: Houston",u:`https://www.cars.com/shopping/results/?stock_type=used&makes[]=jeep&models[]=jeep-wrangler&list_price_max=${MAX_PRICE}&maximum_distance=150&mileage_max=${MAX_MILES}&zip=77002`,d:""},
+  {n:"Autotrader: Austin",u:`https://www.autotrader.com/cars-for-sale/all-cars/jeep/wrangler/austin-tx?maxPrice=${MAX_PRICE}&maxMileage=${MAX_MILES}`,d:""},
+  {n:"Craigslist Dallas",u:CL("dallas").u,d:CL("dallas").d},
+  {n:"Craigslist Houston",u:CL("houston").u,d:CL("houston").d},
+  {n:"Craigslist Austin",u:CL("austin").u,d:CL("austin").d},
+  {n:"Craigslist San Antonio",u:CL("sanantonio").u,d:CL("sanantonio").d}]},
+ {t:"Nationwide / will ship",items:[
+  {n:"Carvana: Wrangler",u:"https://www.carvana.com/cars/jeep-wrangler",d:"Home delivery + 7-day return, a safe way to buy out of state"},
+  {n:"CarMax: Wrangler",u:"https://www.carmax.com/cars/jeep/wrangler",d:"Inspected, 30-day return, will transfer cars to a nearby store"},
+  {n:"TrueCar: under $16,000",u:"https://www.truecar.com/used-cars-for-sale/listings/jeep/wrangler/price-below-16000/",d:""},
+  {n:"CarGurus: under $15,000 (all)",u:"https://www.cargurus.com/Cars/spt-used-jeep-wrangler-under-15000",d:"Bump to $16k"},
+  {n:"Facebook Marketplace",u:`https://www.facebook.com/marketplace/category/vehicles?query=jeep%20wrangler&maxPrice=${MAX_PRICE}&maxMileage=${MAX_MILES}`,d:"Private sellers; vet carefully"},
+  {n:"eBay Motors: Wrangler",u:"https://www.ebay.com/b/Jeep-Wrangler-Cars-Trucks/6001/bn_24015765",d:"Auction/BIN, watch for non-clean titles"}]}
+];
+links.innerHTML=GROUPS.map(g=>`<h2>${g.t}</h2><div class="grid">${g.items.map(i=>`<a href="${esc(i.u)}" target="_blank" rel="noopener"><b>${esc(i.n)}</b><span>${esc(i.d)}</span></a>`).join("")}</div>`).join("");
+
+/* ---------- years table ---------- */
+yrs.innerHTML=YEARS.map(r=>`<tr><td><b>${r.y[0]===r.y[1]?r.y[0]:r.y[0]+"–"+r.y[1]}</b></td><td>${esc(r.g)}</td><td><span class="tag t-${r.t}">${TL[r.t]}</span></td><td>${esc(r.w)}</td></tr>`).join("")
+ +`<tr><td><b>2020+</b></td><td>JL (updated)</td><td><span class="tag t-target">Target</span></td><td>Early JL kinks resolved by 2022+, but all are well above $16,000.</td></tr>`;
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+ document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+b.dataset.p));
+});
+render();
+</script>
+</body>
+</html>
